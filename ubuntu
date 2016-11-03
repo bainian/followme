@@ -1,0 +1,279 @@
+
+安装pip的方法：
+Install pip and virtualenv for Ubuntu 10.10 Maverick and newer
+ 
+$ sudo apt-get install python-pip python-dev build-essential 
+$ sudo pip install --upgrade pip 
+$ sudo pip install --upgrade virtualenv 
+
+将ubuntu主文件夹里的中文目录换为英文的方法，
+ 为了使用起来方便，装了ubuntu中文版，自然在home文件里用户目录的“桌面”、“图片”、“视频”、“音乐”……都是中文的。
+
+   很多时候都喜欢在桌面上放一些要操作的文件，linux里命令行操作又多，难免会用命令行操作桌面上的东西，那么就要 “cd  桌面”，打“桌面”的时候要输入法切换，麻烦……所以就想办法把用户目录下的路径改成英文，而其他的中文不变，方法如下：
+
+打开终端，在终端中输入命令:  
+
+        export LANG=en_US
+
+        xdg-user-dirs-gtk-update
+
+跳出对话框询问是否将目录转化为英文路径,同意并关闭.
+在终端中输入命令:
+
+        export LANG=zh_CN
+
+
+Unable to run mksdcard SDK tool.
+
+系统是ubantu 15.04 64位
+原因：缺少lib
+
+解决方法：
+sudo apt-get install lib32z1 lib32ncurses5  lib32stdc++6
+完美解决。
+
+Ubuntu adb devices : no permissions 解决方法
+
+$sudo vim /etc/udev/rules.d/70-android.rules
+加入以下内容：
+SUBSYSTEM=="usb", ATTRS{idVendor}=="0bb4", ATTRS{idProduct}=="0c87",MODE="0666"
+
+其中的idvendor idProduct指的是USB的ID可以使用lsusb查询得到。
+比如我的是：
+lsusb
+
+Bus 001 Device 010: ID 0bb4:0c87 High Tech Computer Corp
+
+ID 0bb4 就是idVendor ，0c87就是 idProduct
+运行命令，重启udev：
+$sudo chmod a+rx /etc/udev/rules.d/70-android.rules
+$sudo service udev restart
+
+=====================
+
+重置Ubuntu 14.04中的Unity和Compiz
+打开终端（Ctrl+Alt+T），并使用以下命令来重置compiz：
+dconf reset -f /org/compiz/
+重置compiz后，重启Unity：
+setsid unity
+此外，如果你想将Unity图标也进行重置，试试以下的命令吧：
+unity --reset-icons
+可能的疑难解决方案：
+如果你在重置compiz时遇到如下错误：
+error: GDBus.Error:org.gtk.GDBus.UnmappedGError.Quark.g2dfile2derror2dquark.Code17: Cannot open dconf database: invalid gvdb header
+可能的原因是用户文件被搞乱了。备份dconf配置，并移除配置文件：
+mv ~/.config/dconf/ ~/.config/dconf.bak
+希望本文对你重置Ubuntu 14.04中Unity和compiz有所帮助，欢迎您随时提出问题和建议。谢谢阅读，希望能帮到大家，请继续关注脚本之家，我们会努力分享更多优秀的文章。
+
+==========================
+ibus输入法开机启动,在程序里面找到一个启动程序的添加下面命令就好，不会弹出那个对话框
+/usr/bin/ibus-daemon -d -x -r
+
+==========================
+重启nautilsus
+nautilus -q 
+
+========================
+update-apt-xapi 是一个索引扫描进程，会自动在后台启动。
+用来扫描安装了的软件包，以建立索引。
+
+事实上，用处还真的不大，而且它一扫描 CPU 马上飙升到接近 100% 。。。
+
+所以各位看着不爽的可以删除之： 「但是删除之后安装软件后有一个cpu占用更长的时候，所以这个还有留着的好。」
+
+1	sudo apt-get autoremove --purge apt-xapian-index
+2	sudo apt-get autoremove --purge
+
+=============================
+安装nodejs，需要编译安装
+http://www.bubuko.com/infodetail-835851.html
+============================
+git 操作
+http://ndpsoftware.com/git-cheatsheet.html#loc=workspace
+==============================
+rhythmbox乱码的解决
+sudo gedit /etc/profile
+在最后添加：
+export PATH=$PATH GST_ID3_TAG_ENCODING=GBK:UTF-8:GB18030
+export PATH=$PATH GST_ID3V2_TAG_ENCODING=GBK:UTF-8:GB18030
+重新导入
+===============================
+关闭bash的额外搜索
+gsettings set com.canonical.Unity.Lenses remote-content-search 'none'
+===============================
+贴吧的装软件的贴子：http://tieba.baidu.com/p/4318324549
+==============================
+Ubuntu14.04 LTS更新源  http://chenrongya.blog.163.com/blog/static/8747419620143185103297/
+==============================
+notify  通知时间改变google的　https://aiwenhao.com/2014/04/02/Ubuntu%20notify-osd%20%E4%B8%8D%E6%94%AF%E6%8C%81%20-t%20%E6%A0%87%E7%AD%BE%E7%9A%84%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/
+http://askubuntu.com/questions/128474/how-to-customize-on-screen-notifications
+
+=============================
+安装preload来加速应用程序加载时间：
+
+Preload是个后台程序，会分析用户的行为和常用的程序。打开终端，用下面的命令安装preload：
+
+sudo apt-get install preload
+安装完后重启电脑，然后就可以把它忘了，它会在后台运行。[更多关于preload的信息]
+================================
+用apt-fast代替apt-get来加速更新：
+
+apt-fast是用来代替“apt-get”的的一个shell脚本程序，它通过多线程的方式改善了更新和下载安装包的速度。如果你经常用终端和apt-get来安装和升级软件的话，可以试试apt-fast。用下面的命令通过官方PPA安装apt-fast：
+
+sudo add-apt-repository ppa:apt-fast/stable
+sudo apt-get update
+sudo apt-get install apt-fast
+================================
+android studio 打开时出现的问题的解决 
+'tools.jar' is not in IDEA classpath.
+Please ensure JAVA_HOME points to JDK rather than JRE.
+
+down vote
+On my Linux Mint environment I've encountered the same problem. I tried to install Oracle JDK8 using
+
+sudo add-apt-repository ppa:webupd8team/java
+sudo apt-get update
+sudo apt-get install oracle-java8-installer
+but the problem remained because installer didn't change environment variables. Then I tried the following
+
+sudo apt-get install oracle-java8-set-default 「这一步没有执行，但是已经好了，jdk8也配置了环境变量」
+and it solved the problem
+
+==================================
+open jdk 8 install 
+
+sudo add-apt-repository ppa:openjdk-r/ppa
+sudo apt-get update 
+sudo apt-get install openjdk-8-jdk
+sudo update-alternatives --config java
+sudo update-alternatives --config javac
+==================================
+playonLinux
+7zip
+==================================
+MAC主题 https://github.com/lijianying10/FixLinux/blob/master/prob/MacTheme.md
+
+=================================
+查看地内存条
+dmidecode |grep -A16 "Memory Device$"
+
+=================================
+管理内存
+
+要达到释放缓存的目的，我们首先需要了解下关键的配置文件/proc/sys/vm/drop_caches。这个文件中记录了缓存释放的参数，默认值为0，也就是不释放缓存。他的值可以为0~3之间的任意数字，代表着不同的含义：
+
+0 – 不释放
+1 – 释放页缓存
+2 – 释放dentries和inodes
+3 – 释放所有缓存
+
+知道了参数后，我们就可以根据我们的需要，使用下面的指令来进行操作。
+首先我们需要使用sync指令，将所有未写的系统缓冲区写到磁盘中，包含已修改的 i-node、已延迟的块 I/O 和读写映射文件。否则在释放缓存的过程中，可能会丢失未保存的文件。
+
+#sync
+
+接下来，我们需要将需要的参数写进/proc/sys/vm/drop_caches文件中，比如我们需要释放所有缓存，就输入下面的命令：
+
+#echo 3 > /proc/sys/vm/drop_caches
+
+此指令输入后会立即生效，可以查询现在的可用内存明显的变多了。
+要查询当前缓存释放的参数，可以输入下面的指令：
+
+#cat /proc/sys/vm/drop_caches
+
+#free -m
+
+对于清除swap，只有先关闭swap了，用：
+
+#swapoff -a
+
+而后启用swap，因为只是清除，不是说不要用swap的嘛 ：
+
+#swapon -a
+
+管理mem shell文件，用定时执行任务，当内存小于50M时执行
+
+#!/bin/bash
+
+free_mem=$(grep MemFree /proc/meminfo |awk '{print $2}')
+echo  'Free Memory:'$free_mem
+if [ $free_mem -lt 500000 ]
+then
+   sync
+   echo 3 > /proc/sys/vm/drop_caches
+fi
+====================================================
+
+android 源码编译内存不足处理
+diff --git /home/sage/android/aosp/prebuilts/sdk/tools/jack-admin b/tools/jack-admin
+index 753ec5d..e346c45 100755
+--- a/tools/jack-admin
++++ b/tools/jack-admin
+@@ -26,7 +26,8 @@ umask 077
+ JACK_HOME="${JACK_HOME:=$HOME/.jack-server}"
+ CLIENT_SETTING="${CLIENT_SETTING:=$HOME/.jack-settings}"
+ TMPDIR=${TMPDIR:=/tmp}
+-JACK_SERVER_VM_ARGUMENTS="${JACK_SERVER_VM_ARGUMENTS:=-Dfile.encoding=UTF-8}"
++JACK_SERVER_VM_ARGUMENTS="${JACK_SERVER_VM_ARGUMENTS:=-Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx4096m}"
++##### -XX:+TieredCompilation -Xmx4096m ######
+ JACK_EXTRA_CURL_OPTIONS=${JACK_EXTRA_CURL_OPTIONS:=}
+ 
+ LAUNCHER_JAR="$JACK_HOME/launcher.jar"
+@@ -484,6 +485,7 @@ case $COMMAND in
+     if [ "$RUNNING" = 0 ]; then
+       echo "Server is already running"
+     else
++      JACK_SERVER_VM_ARGUMENTS="$JACK_SERVER_VM_ARGUMENTS -Xmx4096m"
+       JACK_SERVER_COMMAND="java -XX:MaxJavaStackTraceDepth=-1 -Djava.io.tmpdir=$TMPDIR $JACK_SERVER_VM_ARGUMENTS -cp $LAUNCHER_JAR $LAUNCHER_NAME"
+       echo "Launching Jack server" $JACK_SERVER_COMMAND
+       (
+
+======================================================
+ssh 到服务端乱码
+编辑 /etc/ssh_config，注释此行“ SendEnv LANG LC_*”即可。ssh命令会发送本地语言环境到目标机器的
+这样改没有起作用,还是直接ssh进去后改的 LANG=zh_CN.UTF-8 export LANG
+=====================================================
+shadowsocks-qt5 安装
+一. 安装 libqtshadowsocks-dev
+git clone 一份 libqtshadowsocks-dev 源代码：
+git clone https://github.com/shadowsocks/libQtShadowsocks.git
+
+安装依赖
+sudo apt-get install qtbase5-dev qt5-qmake qt5-default libbotan1.10-dev unzip debhelper
+
+进入目录，进行编译
+cd libqtshadowsocks-dev
+qmake && make
+
+打包
+dpkg-buildpackage -uc -us -b
+
+安装
+
+sudo dpkg -i ../libqtshadowsocks_1.6.1-1_amd64.deb ../libqtshadowsocks-dev_1.6.1-1_amd64.deb
+#注意，此处包名和版本号有关，安装包在上级目录生成，安装前去上级目录用 ls 看一下
+二. 安装 shadowsocks-qt5
+git 一份 shadowsocks-qt5 的源码
+git clone https://github.com/shadowsocks/shadowsocks-qt5.git
+
+安装依赖，此处按照官方文档
+sudo apt-get install qt5-qmake qtbase5-dev libqrencode-dev libqtshadowsocks-dev libappindicator-dev libzbar-dev libbotan1.10-dev
+
+进入目录编译
+cd shadowsocks-qt5
+qmake && make
+
+打包
+dpkg-buildpackage -uc -us -b
+
+安装
+
+sudo dpkg -i ../shadowsocks-qt5_2.6.1-1_amd64.deb
+#注意，此处包名和版本号有关，安装包在上级目录生成，安装前去上级目录用 ls 看一下
+至此安装完毕。在终端输入ss-qt5即可上网。
+
+文／Zorm（简书作者）
+原文链接：http://www.jianshu.com/p/aa48a0a5b30e
+
+
+
