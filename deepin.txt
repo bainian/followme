@@ -1,0 +1,21 @@
+添加 源，假装ubuntu
+deepin linux:
+1. 修改 /etc/lsb-release，伪装成ubuntu：
+DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=15.10
+DISTRIB_CODENAME=wily
+DISTRIB-DESCRIPTION="Ubuntu wily"
+2. 安装支持“add-apt-repository”命令：
+sudo apt-get install python-software-properties
+sudo apt-get install software-properties-common
+sudo apt-get update
+3. 安装“shadowsocks”
+$ sudo add-apt-repository ppa:hzwhuang/ss-qt5
+$ sudo apt-get update
+$ sudo apt-get install shadowsocks-qt5
+希望能帮到你
+
+作者：ozaki
+链接：https://www.zhihu.com/question/30361833/answer/84878458
+来源：知乎
+著作权归作者所有，转载请联系作者获得授权。
