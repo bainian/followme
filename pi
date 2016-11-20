@@ -1,0 +1,83 @@
+启动一个定时任务：
+crontab 参数：                      
+#-u：只有root才可能，帮其他用户建立或移除工作排程。
+#-l：查阅crontab的工作内容
+#-r：移除所有的crontab的工作内容，移除一项，用-e编辑。
+#每项工作有六个字段分别是：
+#分钟    小时    日期    月份    周    指令
+#0-59    0-23    1-31    1-12    0-7    指令         #0和7都代表星期天
+#辅助特殊字符：
+#* （星号）代表任何时刻
+#，（逗号）代表分隔时候。如3点与6点 就是3,6
+#-（减号）代表一段时间范围内。如：3点到6点 就是3-6
+#/n（斜线）n代表数字，即每隔n单位。如每隔五分钟，/5
+
+#以下我们举个例子，比如每晚定时23:50分需要关机
+#1.编辑crontab 任务：
+#$crontab -e
+#2.再文件的最后一行添加以下这行内容：
+#50 23 * * * /sbin/shutdown -h now
+
+#注：50 23 代表 每天的23：50，执行的命令就是“shutdown -h now”
+#/n（斜线）n代表数字，即每隔n单位。如每隔五分钟，/5
+
+#以下我们举个例子，比如每晚定时23:50分需要关机
+#1.编辑crontab 任务：
+#$crontab -e
+#2.再文件的最后一行添加以下这行内容：
+#50 23 * * * /sbin/shutdown -h now
+
+#注：50 23 代表 每天的23：50，执行的命令就是“shutdown -h now”
+00 21 * * * sudo halt
+
+查看raspberry的默认音频设备:
+cat /proc/aousnd/cards
+aplay -l
+
+安装音乐播放器，用的是阿里的源
+sudo apt-get install mpg123
+sudo apt-get install mplayer
+
+查看wifi：iwlist scan
+自动连接wifi：sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
+添加：network{
+	ssid="wifiname"
+	psk="pwd"
+}
+# 引号部分分别为wifi的名字和密码
+# 保存文件后几秒钟应该就会自动连接到该wifi
+# 查看是否连接成功:ifconfig wlan0
+
+
+树莓派3也直接支持蓝牙，使用直接使用自带命令即可,先打开要连接的蓝牙设备,然后配置树莓派:
+
+[shell]
+pi@raspi3:~ $ sudo bluetoothctl
+[NEW] Controller BB:27:EB:0D:9D:DD raspi3 [default]
+[bluetooth]# list
+Controller BB:27:EB:0D:9D:DD raspi3 [default]
+[bluetooth]# power on
+Changing power on succeeded
+[bluetooth]# scan on
+Discovery started
+[CHG] Controller BB:27:EB:0D:9D:DD Discovering: yes
+[NEW] Device E8:07:BF:3A:25:AA NDZ-03-GA
+[CHG] Device E8:07:BF:3A:25:AA RSSI: -66
+[bluetooth]# agent on
+Agent registered
+[CHG] Device E8:07:BF:3A:25:AA RSSI: -56
+[bluetooth]# pair E8:07:BF:3A:25:AA
+Attempting to pair with E8:07:BF:3A:25:AA
+[CHG] Device E8:07:BF:3A:25:AA Connected: yes
+[CHG] Device E8:07:BF:3A:25:AA UUIDs:
+00001108-0000-1000-8000-00805f9b34ff
+[CHG] Device E8:07:BF:3A:25:AA Paired: yes
+Pairing successful
+[CHG] Device E8:07:BF:3A:25:AA Connected: no
+[bluetooth]# trust E8:07:BF:3A:25:AA
+[CHG] Device E8:07:BF:3A:25:AA Trusted: yes
+Changing E8:07:BF:3A:25:AA trust succeeded
+[bluetooth]# connect E8:07:BF:3A:25:AA
+
+树莓派破解的 wifi： http://lok.me/a/1972.html
+
