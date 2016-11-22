@@ -233,7 +233,7 @@ ssh 到服务端乱码
 编辑 /etc/ssh_config，注释此行“ SendEnv LANG LC_*”即可。ssh命令会发送本地语言环境到目标机器的
 这样改没有起作用,还是直接ssh进去后改的 LANG=zh_CN.UTF-8 export LANG
 =====================================================
-shadowsocks-qt5 安装
+shadowsocks-qt5 安装 ss-qt5
 一. 安装 libqtshadowsocks-dev
 git clone 一份 libqtshadowsocks-dev 源代码：
 git clone https://github.com/shadowsocks/libQtShadowsocks.git

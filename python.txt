@@ -1,0 +1,5 @@
+request text 编码问题： http://sh3ll.me/2014/06/18/python-requests-encoding/
+r.close()
+r.encoding = r.apparent_encoding
+print(r.text)
+
