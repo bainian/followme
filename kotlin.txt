@@ -1,0 +1,21 @@
+NEsted classes, 只是一个嵌套类 Outer.Nested().foo()
+Inner classes, 与java的内部类是一样的效果。内部类可以访问外部类的资源。Outer().Inner().foo()
+Anonymous inner classes,如果是针对于一个功能性的java接口。如果是一个抽象的Interface，可以用Lambda表达式前缀来表示：OnclickListener {log("hello")}
+getClass. 针对实例 foo.javaClass, 针对类，Foo::class.java
+open class: 与java final类相反 ，让其他的类可以继承。by default all classes in kotlin are final, 方法也是一样的final ,如果需要被继承，则表明是open。Interface 默认是open的.
+kotlin里面没有静态类的说法，一般推荐用package-level方法替代。
+object extpressions ： object:A(1),B{ ... } 或者 val aa = object{ ... }, 匿名内部类的访问方式，没有了final的限制。
+包水平的object Manager{} 
+Sealed class,封闭类，是限制层级的类，一般用在可限制范围内的情况 下，比如枚举。
+val只是需要在init中初始化就行了,它是没有setter方法的。一般field的getter是没有=的，直接在大括号里。
+backing fields:
+
+
+
+
+
+
+
+
+
+
