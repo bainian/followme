@@ -1,0 +1,3 @@
+例子：医药网原生APP的微信小程序DEMO
+https://github.com/jiabinxu/yiyaowang-wx
+https://github.com/maichong/labrador
