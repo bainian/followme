@@ -3,3 +3,5 @@ r.close()
 r.encoding = r.apparent_encoding
 print(r.text)
 
+下载一个网站：
+wget -c -r -np -k -L -p --restrict-file-names=utf-8 http://www.baidu.com
