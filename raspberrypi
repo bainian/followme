@@ -1,0 +1,958 @@
+那么什么是Raspberry Pi？
+
+http://skypegnu1.blog.51cto.com/8991766/1641149
+
+    Raspberry Pi是一款针对电脑业余爱好者、教师、小学生以及小型企业等用户的迷你电脑，预装Linux系统，体积仅信用卡大小，搭载ARM架构处理器，运算性能和智能手机相仿。在接口方面，Raspberry Pi提供了可供键鼠使用的USB接口，此外还有快速以太网接口、SD卡扩展接口以及1个HDMI高清视频输出接口，可与显示器或者TV相连。它价格便宜，使用功率小，所以它很适合用于嵌入式项目。很多人已经能够把Pi用于各种项目，从针对小孩的一些简单项目到携有更高级功能的复杂项目，它可以被创造的像一个桌面PC那样用于制作电子表格、文字处理和玩游戏，它还可以播放高至1080p的高清视频。
+    所谓麻雀虽小五脏俱全， 用来形容树莓派（ Raspberry Pi） 最好不过了 ， 这块信用卡般大小的主板拥有和pc样的能力。USB， Ethernet， HDMI， RCA， 3. 5mm Stereo Jack， 还有无比强大的GPIO， 当然我很少能用到这个。
+树莓派2采用了900MHz的四核ARM Cortex-A7处理器（性能是前代的6倍以上），1GB的LPDDR2 SDRAM（内存提升两倍），并完美兼容第一代树莓派。因为采用了ARMv7处理器，所以能够运行所有ARM GNU/Linux分支版本，包括Snappy Ubuntu Core和微软的Windows 10系统。
+    现在树莓派主要是做家庭影院，N基于Samba实现NAS系统，NFS和Airplay音频网关以及BT下载机
+
+Raspberry Pi 2 开箱
+
+    为了寻找DIY的乐趣，近期入手了Raspberry Pi 树莓派卡片机，体验了一下它的强大。
+    淘宝上买的，只有一个电路板和说明书，不包含SD卡或电源等任何配件，如果需要电源、SD卡、无线网卡或其他配件，都需要单独购买。那卖家真的是一个铁公鸡，尼玛，一毛不拔，磨了半天什么都不送，又花钱买了一个外壳和电源（其实没有多大必要，手机充电器即可），有条件的同学可以买HDMI, 和一个 8G的SD卡。
+    最气愤的是，买的电源线还是有问题的，我去。。。还好卖家返了7块钱，不然一定差评，真够郁闷
+wKioL1VCwsDRC1iaAAN0GqzYQ6c086.jpg
+这种纸盒的包装，怎么看起来这么 low ，还以为很高大上。。。
+wKiom1VCwVfTuPt3AAPNupIDs6c341.jpg
+板子，外壳+兼容风扇， 电源（不过电源线有问题，j_0009.gif）
+wKiom1VCwVjQKRDXAAQPBj_xtcw477.jpg
+树莓派电路板，小板。。实在太精致了，有木有j_0006.gif
+wKioL1VC0naD1ArHAALmZPPae2U762.jpg
+
+安装外壳。。风扇安装有点坑，主要是注意方向
+wKioL1VC0nXz2N_cAAODnQ3ug2M462.jpg
+wKiom1VC0QvDTxdCAAMAp6hNXnQ226.jpg
+大功告成，还是很顺利的，就是在安装风扇的时候，有点纠结。
+wKioL1VCwsPAxQOhAATNpTG7QCo895.jpg
+OK， 成品。。还不错吧
+
+准备工作（外围部件）
+
+安装之后，就迫不及待的想开机测试，少年，不要太冲动，冲动是魔鬼，我们还需要做一些准备工作：
+必备：
+树莓派板子（必备）
+一张SD卡，4G以上（推荐8G），最好是 class10 的，读写速度快，因为要在卡里刷系统（必备）
+一个电源（5V --- 2A的电源那就可以比较自由的接各种外设）和电源线，我用的是小米手机电源也可以，同样也可以通过电脑USB接口供电（必备）
+一根RJ-45网线，联网（必备）
+可选
+一个USB鼠标、键盘 （用于输入，非必需）
+读卡器（可选，用来连接电脑，烧录SD卡，可以利用手机代替）
+HDMI高清线，连接显示器或者电视（根据实际情况）
+耳机音箱（根据实际情况）
+移动硬盘（根据实际情况）
+无线网卡（根据实际情况，我这里太穷，只有把之前的小米wifi拿来折腾一下了j_0063.gif）
+
+这是从网上找的连接图：
+wKiom1VCy8mgORTSAAMEUqEiyZQ069.jpg
+普及一下树莓派的基础知识。
+如何启动？
+系统引导必须使用SD卡，不过您可以指定引导之后从USB硬盘中读取操作系统，来“接管”启动过程。
+如果不插SD卡，树莓派无法启动。
+电源开关在哪里？
+开机：插上电源插头
+关机：拔下电源插头（不建议，推荐使用 shutdown -h now, 或 halt 关机）
+特别提醒：树莓派毕竟是电脑！请先使用关机命令(halt或sudo halt)，确保Linux停止对SD卡的一切读写后再切断电源！否则极易丢失数据。
+为什么没有实时时钟？
+树莓派没有实时时钟，关机后无法维持时钟的走时。没有连接网络的树莓派，每次开机时都需要手工设定时间。（连接网络的，开机时会自动联网获取时间）
+树莓派能连接什么显示设备？
+树莓派提供HDMI与复合视频两种输出。您可以将树莓派连接到任何电视机的A/V输入端子，或是新型电视的HDMI端子上。也可以使用廉价的HDMI转DVI线缆（转接头）连接支持DVI输入的显示器。
+树莓派不支持VGA。如果要使用VGA或YPbPr色差，您需要一个相对贵一些的HDMI转VGA转换器。
+最便宜的可靠的HDMI转VGA转换器，在淘宝上72元可以买到，介绍文档会稍后贴到论坛上。
+当然，尽管对初学者可能有些难，但树莓派即使没有显示器，也可以通过 SSH 远程登录进行操作！
+所需电源是？
+树莓派工作电压为5V，从一个micro USB接口输入。经销商有售电源适配器。
+您可能都未必需要购买电源：只要找到任何合格的USB口5V1A的电源，加上一条microUSB数据线就可以给树莓派供电！（现在很多智能手机的充电就是这个配置）
+有关SD卡和存储设备
+建议SD卡选择速度等级为Class10的，可以用满树莓派对SD卡的读写能力，最大限度提高速度。
+推荐SanDisk Ultra Class10 TF 8GB这张卡。销量大用的人多，便宜又成熟。
+8GB是推荐的大小，肯定够用，并且备份恢复都方便。16或32GB就太大了不够灵活
+但是，一个古老的说法一定要得到充分的重视。这个说法是当年玩相机的时候流传出来的，SD卡会有兼容性问题（SD卡里基本就是个闪存颗粒，读写全靠读卡器里的电路，所以匹配可能会有问题）。虽然好像我们没有在相机上发生过卡不兼容的问题，但是Raspberry Pi真的会发生这种兼容问题。所以在买SD卡前，一定要先搜一下看看这个卡是否能用。当然了，万一你买到的卡有兼容问题，不过就是开机十分缓慢或者根本无法开机而已，没什么大不了的，换一张卡即可。
+操作系统下载和安装
+
+    就像每一个普通的个人计算机（PC）那样，树莓派只是提供了硬件环境，树莓派需要一个操作系统，最好是选择Linux。选择Linux是因为它免费，而且可支持ARM处理器，并且可以精简的足够小。但是要注意，并不是所有的Linux发行版都能运行于树莓派。因为有些Linux发行版不支持树莓派指定的ARM处理器。比如你不能在树莓派上安装Ubuntu Linux。
+    本文将安装最新的 Raspbian 发行版，整个安装过程与安装其它操作系统差不多。因此，必须创建或找到一个Linux发行包，并复制到SD卡上。最简单的方法是从Raspberry项目中下载。你可以下载 Debian wheezy，又或者是Arch Linux ARM，或者是Qton Pi，还有Bodhi Linux。而且有些牛人开始移植Google的Chrome OS。
+Debian wheezy完全支持树莓派的硬件，而且它自带了一套成熟的桌面UI，还有浏览器。另外，它还有一个功能强大的包管理器，可以用它安装更多的软件。下面，我们将学习怎样安装它。
+Arch Linux ARM是一个极简的操作系统，它适合那些非常熟悉Linux系统的人。Arch Linux没有使用多少资源，它有很好的包管理器。因此，如果你想把树莓派当作服务器的话，它是很好的选择。而对于桌面系统，Debian更适合。默认的Arch Linux没有桌面环境。你必须安装和配置它。
+此外，还有很多系统，比如Android， Xbian (xbmc 与 debian的结合体)等，也可以下载安装玩玩。
+    
+    现在使用的比较广泛的是Raspbian， 基于Debian wheey， 也是官方推荐的版本。得益于Debian的简单易用、稳定性好的特定，而且软件源也丰富。（我在写此文时，Raspbian最新是 2015-02-16版）
+树莓派官方 Raspbian 系统下载：http://www.raspberrypi.org/downloads 
+或直接下载 http://downloads.raspberrypi.org/raspbian_latest.torrent 最新版的 BT 种子。
+还有一个选择是由国人制作的超级精简版，更低内存占用：http://pan.baidu.com/share/link?shareid=167943&uk=1412008571
+
+选择并下载操作系统只是第一步，下面你还需要安装它。
+    所谓“安装系统”其实不如说是“恢复”下载到的系统镜像到内存卡上，这个过程也没什么难度，就是看内存卡的速度，慢慢等而已。需要注意的是，市面上部分 4G 的内存卡，实际大小才 3.6G 多，会提示空间不足，所以还是直接购买 8G 吧，也差不了几块钱。 把操作系统安装到SD卡上比较麻烦。
+
+制作可引导的SD卡
+1）你需要一个带读卡器（或者利用手机代替）的PC，我是把内存卡插在手机上，然后连接在电脑上操作，当然也可以用读卡器
+2）从官方下载页下载wheezy-raspbian映像文件。
+下载地址： http://shumeipai.nxez.com/download 这里有很多种适用于树莓派的操作系统镜像，选择一个适合自己的（推荐基于debian的Raspbian “wheezy”）。
+下载完成后，PC上将有2015-02-16-wheezy-raspbian.zip文件。
+3）用专门的工具将映像文件写入到SD卡。
+Windows用户可以使用USB Image Tool（更强大） 或者 Win32DiskImager软件，Unix用户使用dd工具。
+
+Linux / MAC 用户使用dd命令制作引导镜像：
+下载完成后，先解压，会看到一个 img 镜像，然后我们需要通过 dd 命令把这个img 写入SD卡，使用dd命令将系统镜像写入，需要特别特别注意disk后的数字，不能搞错！
+
+# dd bs=4M if=wheezy-raspbian.img of=/dev/sd?        # 使用fdisk -l 查看内存卡的sd?
+Windows屌丝用户专用：
+USB Image Tool，就是Win32DiskImager的一个更方便的替代品。先来看看介绍：
+此工具特点：
+中文文件名OK！
+可以通过设备名称、SD卡大小，直接判断写入的设备正确与否。
+只能读写SD卡和U盘，干脆不认USB移动硬盘，保证安全。
+自带压缩，备份可直接压缩成ZIP/GZ，恢复可以直读ZIP/GZ包。
+“收藏夹”功能，一键恢复你喜欢的多种系统。
+刷新设备列表功能，可以先开软件再插SD卡，甚至先开软件再插读卡器都行。
+一个软件窗口内，多个读卡器就可以并行读写，互不干扰，无需开多次软件。
+    用法很简单：左侧选好盘，右侧使用“Restore”将.img镜像写入SD卡；使用“Backup”将SD卡内容存成.img镜像。
+注意：左上角必须是Device Mode，不能是Volume Mode！（因为我们读写的是整个SD卡，而不是某一个分区）默认就是Device Mode所以不用管。但是如果出错，就请检查一下是不是误碰了~
+写SD卡：直接读取zip压缩包
+USB Image Tool可以直读.zip压缩包。网上下载的zip格式系统镜像，下完直接用，根本不用解！
+点击Restore，选择.zip文件即可。注意打开对话框中默认看不到.zip文件，放心，在“文件类型”处选择“All Files (*.*)”即可。
+更多详情：http://shumeipai.nxez.com/2013/08/31/usb-image-tool.html#more-105
+    首先，电脑连接上我们的内存卡，然后运行 USB Image Tool 工具。在左侧选中我的SD卡，然后点击“Restore”,即会弹出一个对话框，选中相应镜像的zip包即可。
+wKioL1VCv5OTREk-AAErjRIGEqA944.jpg
+    请静静等待进度条走完，期间不要断电和拔掉SD卡。
+==============  华丽的分隔线 ================================
+    当然，利用 Win32DiskImager 也是可以的，很多新手教程都是使用这个软件来作为镜像写入工具的。但是这个工具不支持中文目录名（文件或目录有中文，会出现123错误），不支持压缩，必须先插好SD卡，再开软件。注意一定要选对正确的SD卡盘符。
+安装实战
+1.解压下载的操作系统镜像压缩文件，得到img镜像文件。
+2.将SD使用卡托或者读卡器后，连上电脑。
+3.解压并运行win32diskimager工具。
+4.在软件中选择系统镜像（img文件），“Device”下选择SD的盘符，然后选择“Write”，期间出现对话框选择是。
+wKiom1VC16LTbbc3AADClS1PHt4440.jpg 
+    等待安装完成，烧写结束后，在 windows 7下面显示 SD卡不足100M，我去，不会吧。。。其实不用担心，因为烧录的过程会将SD卡格式化为Linux的文件系统，我们能看到的这个分区只是Linux的boot分区，而其他的部分为LInux 的文件系统类型：ext4，所以我们的windows 是无法识别的。
+
+HDMI-VGA转换器黑屏的排障方案
+这个配置提供了HDMI的所有故障排除用的保守设置。请将SD卡插入电脑，将这些内容存为config.txt。（原来的config.txt可以备份一下。）在开机前需要对 config.txt 文件进行修改（我这边因为没有连接显示器，所以没有做这一步，大家如果需要可以参考）
+首先，打开SD卡的boot分区，简而言之，修改如下：
+1、使用 notepad++， 或者 sublime text 打开 boot 下的 config.txt 文件
+2、 将 "hdmi_force_hotplug=1, hdmi_group=2, hdmi_mode=16, hdmi_drive=2, config_hdmi_boost=4, sdtv_mode=2, arm_freq=800" 这几项前面的注释符号“#”去掉。
+wKioL1VCy8qA4wceAADveVMC0GI577.jpg
+hdmi_force_hotplug=1
+config_hdmi_boost=4
+hdmi_group=2
+hdmi_mode=9
+hdmi_drive=2
+hdmi_ignore_edid=0xa5000080
+disable_overscan=1
+解释：
+hdmi_force_hotplug：强制使用HDMI输出（强行认为HDMI口已经插入了设备）
+config_hdmi_boost：HDMI信号增强。
+hdmi_group、hdmi_mode：决定分辨率。group=2, mode=9 代表800×600 @ 60Hz。
+hdmi_drive：强制音频输出到HDMI口（注意，仅适用于带音频的HDMI-VGA转换器！！如果想让音频从模拟输出，则去掉此项！！）
+hdmi_ignore_edid：强行按hdmi_group和hdmi_mode规定的分辨率输出。不检测显示器自身的分辨率。
+disable_overscan：强行禁止保留黑边功能。
+
+这个文件会命令树莓派：强制使用800×600分辨率，60Hz刷新率，并强制从HDMI输出。
+请先尝试这样开机。如果开机能成功，就把hdmi_group和hdmi_mode，更改成自己显示器的分辨率即可。如果不行，请更改hdmi_mode的值更换以下其他分辨率：
+
+hdmi_mode=4    640x480   60Hz
+hdmi_mode=9    800x600   60Hz
+hdmi_mode=16   1024x768  60Hz
+hdmi_mode=17   1024x768  70Hz
+hdmi_mode=23   1280x768  60Hz
+启动树莓派
+
+    OK, 把 SD 卡插在树莓派的菊花处？嘿嘿。如果你有HDMI线，并且显示器支持HDMI接口，接上显示器，接上电源即可。当然还有USB键盘，鼠标。如果是HDMI转VGA线，网上很多人说树莓派驱动不了（估计电压不够），所以你在买线的时候，就得买自带电源的HDMI转VGA线。（我个人感觉没有必要这么搞，要么远程，要么通过HDMI连接到高清智能电视）
+    并连接上网线，都连接好之后，然后接入电源，接通电源后树莓派会自动启动（树莓派没有开关机键，通电会自动开机），启动机器。 起来嗨。。。
+wKiom1VC38OA5zICAAY84DX30WE812.jpg
+树莓派LED指示灯状态的解释
+wKioL1VDTtnQsyu6AAEtUA4RxR0988.jpg
+wKiom1VDTW_zWoGHAAHmzjWckqM865.jpg
+
+启动树莓派，无显示器操作，通过SSH远程连接
+
+    老实说，我一直把树莓派定位为“一个扔在某个角落就可以自己跑得很欢的小电脑”，加上那仅有的4个 USB 口，一个插了 USB 无线网卡，另一个再拖个键盘或鼠标啥的，实在很不方便，那么最好还是能远程访问吧。一根网线，一根电源线，然后就可以把树莓派扔到角落里去，鼠标，键盘。who care ？ 
+    好在树莓派默认是有开启 SSH 的，但是我们系统刚安装，IP 还没设置，怎么找到它的 IP 地址呢？
+网段扫描法
+这时候就推荐使用另一个神器 PortScan 来找出我们的机器：
+    打开 PortScan 选择扫描范围，可以很方便的找出局域网中的其它机器，一般家庭中也没太多机器（手机可以查看wifi详情，从而可以查看 IP 地址），找出树莓派是很容易的，如果是在公司，有很多机器的话，那么可以忽略那些有机器名的，然后剩下的一个一个尝试吧… 
+    PortScan 下载地址：http://abel.oss.aliyuncs.com/file/PortScan.zip
+wKiom1VCxU6hvqKuAAGyx94r0wI662.jpg
+
+我们可以看到，树莓派启动时，默认启动了SSH，打开了ssh的22端口。然后我们可以通过SecureCRT连接到树莓派上：
+
+wKioL1VCx3CjGHhSAAEZqA4QSEU465.jpg
+树莓派默认登录的用户名/密码：pi / raspberry
+wKioL1VCx3CygfxQAAMyjfR8I5M605.jpg
+想想，还真有点小激动。。j_0003.gif
+如果出现乱码的情况，可以修改 SecureCRT 的字符集：
+wKioL1VDQy_gDYgoAAGQtcHOZNM217.jpg
+另外提醒：新装系统SSH首次登录，不会出现第一次开机的raspi-config设置程序。请用sudo raspi-config命令手工启动。
+路由器查询法
+    如果您有路由器的登录权限（例如家庭网络），也可以在路由器的管理界面，直接查询路由器分配给树莓派的IP地址。
+树莓派Raspbian系统的默认主机名是raspberrypi，找就行了。
+（如果用ArchLinuxARM系统，找alarmpi。如果自己更改了hostname，改成啥就找啥）
+
+wKioL1VDPATjdqFlAAESMSvti0c255.jpg附：使树莓派每次都能动态分配到同一个IP地址
+
+动态IP是有租期的。租期到了，再分配到的IP地址可能会改变，有时会造成不便。
+如果能够管理路由器，可以命令路由器记住树莓派网卡的MAC硬件地址。【静态地址绑定功能】
+只要是同一台树莓派，无论操作系统如何变化，路由器就会自动分配同一个IP地址，永不变化。
+推荐这种方法。因为既能享受自动分配IP地址的方便，又能保证IP地址固定，方便SSH、VNC等的连接。
+静态IP地址绑定到MAC地址的方法，不同的路由器设置方法大同小异，具体请参考路由器用户指南。
+
+PHICOMM FIR302M 设置：
+
+wKiom1VDOw2Cj4ZTAAEJBsNhMiM012.jpg
+
+用户设置
+
+如果你安装的是官方的 Raspbian 系统，那么默认的登录帐号为 pi ，密码是 raspberry 
+为了方便折腾，建议第一时间启用 ROOT 账号吧（为了安全，非常不建议这样做）~ 这个也很简单的，只需要执行一下两句命令即可：
+
+# 重新设置 pi 用户的密码
+passwd pi
+ 
+# 设置 root 账号的密码，会让你输入两次新密码
+sudo passwd root
+ 
+# 启用 root 账号登录
+sudo passwd --unlock root
+ 
+# reboot
+sudo reboot
+执行完之后，用 reboot 命令重启就可以用 root 登录啦。这里仅仅是演示如何操作，个人强烈建议不要这么操作，为了安全，还是以普通用户登录，然后通过 su - root 来切换到root 用户工作。
+
+使用raspi-config配置树莓派
+Expand Filesystem 扩展SD卡可用空间
+
+    第一次用 root 登录，会自动弹出树莓派的高级设置面板（以后也可以通过 sudo raspi-config 命令进入）：
+wKioL1VCz26yduIIAAJHErVee6g426.jpg
+我这里应该是型号不一致，所以从网上找到网友下面的说明不一致哈，大家参考即可
+wKioL1VCz27CFcwhAATxBT2Q6qM556.jpg
+wKiom1VCzgSj7VlVAADeK_ZKIs8591.jpg
+
+首先：选择第一项 Expand Filesystem 扩展 SD 卡上可用的空间，不然以后会有很多大软件，不能安装（提示空间不足）。它的作用是将刚才写入到 Micro SD卡中的映像文件大小扩展到整张Micro SD卡中。
+ 选中expand_rootfs选项，然后按下回车。你会看到如下提示，只需要再按一下回车就可以回到 raspi-config 主菜单中了。
+wKiom1VC0y-wNocQAABtCVqxrPk406.jpg
+扩展之后提示需要 reboot, 重启之后可以通过 df -h 命令看到效果~
+
+Internatioanlisation Options 国际化设置
+
+    然后：选中第四项 Internationalisation Options 国际化设置，包括（locale, timezone, keyboard layout）
+wKiom1VC1bfRvNlnAAHxoHEzm5c271.jpg
+    接下来我们更改键盘布局，确保我们的键盘能正常工作，Raspbian默认的是英国键盘布局，而我们在中国使用的键盘布局与美国相同，因此我们要对它进行更改才能正常使用。
+    选中 Change Keyboard Layout， 然后回车。选择键盘类型，我们选择 Generic 105-key(Intel) PC 键盘类型。
+wKioL1VC1yHSIWZKAAFsa9_Yr2E317.jpg
+    选择了键盘类型之后，我们需要为它再选择一个键盘布局。刚开始显示的列表中，都只是英国的键盘布局，但是我们现在可以选择美国的键盘布局，因此我们选择（Other），然后再里面的列表中选择 English（US）即可。
+wKiom1VC1meCCE6-AAHWHWFD444198.jpg
+wKioL1VC19GiAiIVAAF_5YmJ1SE411.jpg
+
+    然后你会被问到关于辅助键的问题， 选择默认的选项， 并且在下一个画面中选择No compose key选项。 同样， 如果你需要更改这个设置，可以使用raspi-config来更改。
+Change User Password 更改默认用户 pi 的密码
+
+    前面我们已经提到，在命令修改密码，如果对命令行不熟悉的同学，可以在这里进行修改。 Change User Password， 按下回车，一个确认窗口弹出来，在屏幕下方会提示你输入一个新的UNIX密码。
+
+Change locale 更改默认字符集
+    同样，如果你不想使用英国英语，那么你可以在这里更改这些设置。在演示中我们选择的是美国英语，因此我们选择en_US.UTF-8，并下翻列表将en_GB选项剔除。
+    再下一个对话框中会让你选择默认的区域，选择你刚才选的区域然后按回车继续。
+回到raspi-config的主菜单，设置适当的时区。选中change_timezone选项然后按下回车。你会先看到一个地区列表。
+wKioL1VDSBvi0horAACQZrf6Vr4131.jpg
+更换软件源（apt-get sources）
+
+    树莓派的官方提供的源服务器访问起来实在太太太太太太慢了！会导致你安装一个几M的东西都要等大半天！肿么办！ 
+好在树莓派官方有提供一个镜像列表：http://www.raspbian.org/RaspbianMirrors 
+
+中山大学
+Raspbian http://mirror.sysu.edu.cn/raspbian/raspbian/
+
+中国科学技术大学
+Raspbian http://mirrors.ustc.edu.cn/raspbian/raspbian/
+
+清华大学
+Raspbian http://mirrors.tuna.tsinghua.edu.cn/raspbian/raspbian/
+
+华中科技大学
+Raspbian http://mirrors.hustunique.com/raspbian/raspbian/
+Arch Linux ARM http://mirrors.hustunique.com/archlinuxarm/
+
+大连东软信息学院源（北方用户）
+Raspbian http://mirrors.neusoft.edu.cn/raspbian/raspbian/
+
+重庆大学源（中西部用户）
+Raspbian http://mirrors.cqu.edu.cn/Raspbian/raspbian/
+
+    在里面找到了几个国内的镜像，经过几番尝试，觉得来自中科大的速度非常不错~ 咱们就换成中科大的吧，镜像主页：https://lug.ustc.edu.cn/wiki/mirrors/help/raspbian
+
+wKioL1VC2ZvhiSRWAAD9XtRNpWs251.jpg
+
+根据教程，咱们来编辑 /etc/apt/sources.list 文件。这里推荐用 nano 命令编辑，舍得去弄什么 VIM 啦。命令如下：
+
+
+sudo cp /etc/apt/sources.list /etc/apt/sources.list.$(date +%F)
+sudo nano /etc/apt/sources.list
+进入编辑界面，删除原有的内容，粘贴中科大提供的内容，结果如下：
+
+deb http://mirrors.ustc.edu.cn/raspbian/raspbian/ wheezy main non-free contrib
+deb-src http://mirrors.ustc.edu.cn/raspbian/raspbian/ wheezy main non-free contrib
+然后使用 Ctrl+O 保存文件，Ctrl+X 退出编辑器。 
+然后执行 apt-get update 命令更新软件列表。
+
+重庆大学镜像源，也非常快速。。很给力
+
+su - root        # （如果已经是root账户登录，即可跳过此步骤）
+cd /etc/apt/ && mv sources.list sources.list.bak      # （备份现有的源文件）
+wget http://mirrors.cqu.edu.cn/distri/Raspbian/sources.list   # （下载重庆大学镜像源配置文件）
+ 
+apt-get update
+apt-get upgrade
+大家可以忽略下面这点内容，个人还是不喜欢使用 nano 这个文本编辑器，上 vim 吧。
+默认树莓派安装官方的 Raspbian 系统，是没有安装 vim 的，执行下面的命令安装。
+
+ $ sudo apt-get install vim
+安装成功之后，编辑 .bashrc， 加入 alias vi='vim' 
+编辑 .vimrc ， 加入
+
+pi@raspberrypi:~$ vim .vimrc
+set nu
+syntax on
+set tabstop=4
+软件安装与卸载
+
+apt-get
+
+安装软件 apt-get install softname1 softname2 softname3……
+卸载软件 apt-get remove softname1 softname2 softname3……
+卸载并清除配置 apt-get remove -purge softname1
+更新软件信息数据库 apt-get update
+进行系统升级 apt-get upgrade
+搜索软件包 apt-cache search softname1 softname2 softname3……
+ 
+如果使用 apt-get 遇到速度慢或者源不存在等错误，可能需要更换源
+dpkg 
+
+安装deb软件包          dpkg -i xxx.deb
+删除软件包             dpkg -r xxx.deb
+连同配置文件一起删除   dpkg -r -purge xxx.deb
+查看软件包信息         dpkg -info xxx.deb
+查看文件拷贝详情       dpkg -L xxx.deb
+查看系统中已安装软件包信息     dpkg -l
+重新配置软件包         dpkg-reconfigure xxx
+常用命令
+
+apt-cache search         # ------(package 搜索包)
+apt-cache show           #------(package 获取包的相关信息，如说明、大小、版本等)
+sudo apt-get install     # ------(package 安装包)
+sudo apt-get reinstall     # -----(package - - reinstall 重新安装包)
+sudo apt-get -f install  # -----(强制安装?#"-f = --fix-missing"当是修复安装吧...)
+sudo apt-get remove      #-----(package 删除包)
+sudo apt-get remove --purge # ------(package 删除包，包括删除配置文件等)
+sudo apt-get autoremove --purge # ----(package 删除包及其依赖的软件包+配置文件等（只对6.10有效，强烈推荐）)
+ 
+sudo apt-get update      #------更新源信息数据库
+sudo apt-get upgrade     #------更新已安装的包
+sudo apt-get dist-upgrade # ---------升级系统
+ 
+sudo apt-get dselect-upgrade #------使用 dselect 升级
+apt-cache depends #-------(package 了解使用依赖)
+apt-cache rdepends # ------(package 了解某个具体的依赖?#当是查看该包被哪些包依赖吧...)
+sudo apt-get build-dep # ------(package 安装相关的编译环境)
+apt-get source #------(package 下载该包的源代码)
+sudo apt-get clean && sudo apt-get autoclean # --------清理下载文件的存档 && 只清理过时的包
+sudo apt-get check #-------检查是否有损坏的依赖
+
+设置静态IP地址
+
+    回到前面刚刚提到的，不知道 IP 地址的问题，咱们要给树莓派设置一个静态 IP，省得 IP 变换又要重新找机器。还是用 nano 来编辑网络接口文件：
+
+
+sudo nano /etc/network/interfaces
+ 
+默认网络配置：
+auto lo
+iface lo inet loopback
+iface eth0 inet dhcp
+allow-hotplug wlan0
+iface wlan0 inet manual
+wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
+iface default inet dhcp
+如果你要设置的是有线网卡的 IP 地址，那么把 eth0 的 dhcp 改成 static 然后在下一行追加 IP 信息，结果大概如下：
+
+iface eth0 inet static
+address 192.168.3.200    # 设定的静态IP地址
+netmask 255.255.255.0    # 网络掩码
+gateway 192.168.3.254    # 网关
+然后通过 /etc/init.d/networking 重启网卡，竟然卡住了，悲催。算了，直接拔电重启了
+
+    如果你要设置的是无线网卡, 并且当前网络有DHCP服务器,以及 WIFI环境（家用路由器即可），那么除了把 wlan0 的 manual 改成 dhcp 之外，还需要填写无线网的名称和密码，编辑后的结果大概如下：
+方法一：直接修改网络配置文件
+
+auto lo
+ 
+iface lo inet loopback
+ 
+iface eth0 inet static
+address 192.168.3.200
+netmask 255.255.255.0
+gateway 192.168.3.254
+ 
+### 看这里
+auto wlan0
+allow-hotplug wlan0
+iface wlan0 inet dhcp
+ 
+wpa-ssid  Your_Wifi_SSID      # wifi ssid， 需要接入的无线信号的SSID
+wpa-psk  Your_Wifi_Password    # wifi password，PSK即无线的密码
+#wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf   # 注释
+iface default inet dhcp
+不建议这样配置，我们还是应该把密码保存在wpa_supplicant.conf文件中。
+
+方法二：使用无线管理器 wpa_supplicant 进行管理
+
+### 编辑 /etc/network/interfaces 
+auto lo
+ 
+iface lo inet loopback
+ 
+iface eth0 inet static
+address 192.168.3.200
+netmask 255.255.255.0
+gateway 192.168.3.254
+ 
+### 看这里
+auto wlan0
+allow-hotplug wlan0
+iface wlan0 inet dhcp
+# wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
+# wpa-roam can only be used with the "manual" inet METHOD  
+ 
+wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf     
+iface default inet dhcp
+ 
+### 编辑 /etc/wpa_supplicant/wpa_supplicant.conf
+sudo vim /etc/wpa_supplicant/wpa_supplicant.conf
+ 
+network={
+ssid="你的SSID"       
+proto=RSN
+key_mgmt=WPA-PSK
+pairwise=CCMP TKIP
+group=CCMP TKIP
+psk="WIFI密码"
+auth_alg=OPEN
+}
+ 
+## 重启wlan0
+# ifdown wlan0
+# ifup wlan0
+ 
+# ifconfig
+ 
+## 或重启网络服务
+/etc/init.d/networking restart
+搞定之后，如果重启网络服务不行，咱们用 poweroff 命令关掉树莓派，等到机器上的绿灯不闪了，把电源拔掉，再把网线拔掉，重新连接电源，稍等一会，看看是不是就通过无线网络的 IP 地址可以访问了。
+
+OK，你的树莓派自由了，不再需要网线拖着了。随便放!
+PS: 再用一个手机充电宝供电的话，连电源插座也不需要，树莓派更自由了。
+使用无线网卡解除网束缚
+  准备工作，当然要先去购买一个USB无线网卡，可以购买的型号比较多，Raspberry Pi官方也提供了兼容性列表供大家参考，具体猛击这里。
+1、第一步当然是把我们的无线网卡插入到树莓派USB口中。
+2、使用 lsusb 命令来查看当前的USB设备列表，看无线网卡能够被系统识别（建议购买兼容性比较好，网友使用比较多的无线网卡品牌，否则可能没有驱动支持，很麻烦）
+3、使用ifconfig命令查看接口设备
+4、按照前面配置IP章节，配置无线网络参数， ifdown wlan0, ifup wlan0
+
+使用小米随身 wifi 变身无线网卡
+    树莓派必须连接一根网线，感觉很不方便（解除网线的束缚），能不能使用无线呢？ 可以，但是其本身并没有带无线网卡，需要额外提供，网上至少也要3，50块吧。怎么办？ 想想，能不能把小米随身Wifi变身无线网卡， 说干就干。。
+原理：
+随身wifi本身无线网卡，但是厂商修改了PID，使其系统无法自动识别驱动。而改用各个厂商定制自带的驱动软件作为Ap来使用。
+
+1、首先下载 小米随身Wi-Fi 驱动。
+2、然后一边安装一边可以把小米随身Wi-Fi插入电脑中（等待安装完成，点击开始使用）；
+3、然后在电脑下方状态栏的随身Wi-Fi图标中，鼠标右键点击安全退出（此时Wi-Fi不需要拔出来）；
+4、关键点来了，按键盘上的windows键+R键启动“运行”（也可以手动启动）；
+ 
+ 022547na9ia91jau1mlg00.jpg.thumb.jpg 
+ 
+5、如图所示，在打开那一行中输入msconfig，然后点击确定。（因不同system界面的不同，此处补加以图的解析，请认真看文字理解）；
+6、然后会出来一个界面，此时点击启动；
+7、最后把MiWiFiMonitor.exe这一项目禁止开启，然后重启电脑；
+8、此时你会发现，你的随身WIFI已经变成一个无线网卡来使用了（想要恢复就按照教程4-7，把MiWiFiMonitor.exe禁止开启取消）；
+
+==========================================
+1、到官网下载官方驱动，但是不要安装。其次安装7zip这个压缩软件。
+2、提取驱动程序
+wKiom1VC7x_g_o8EAAFTbpkAxeE769.jpg
+3、插入小米wifi， win7 会提示更新驱动，选择跳过
+4、右键计算机，管理 - 设备管理器，你会发现小米WiFi，有一个感叹号，就是没有驱动的表现。
+5、右键，更新驱动程序
+wKioL1VC8IqyANHRAADOJH6x7dA451.jpg
+6、选择刚才提取的路径，选择相应系统的文件夹： Win7x64, 等待驱动安装完成
+wKiom1VC7--iSqNzAAB9M42Vd2M857.jpg
+7、连接wifi
+wKiom1VC8FmwsIcDAAC-4FoXXJI339.jpg
+
+对于已经安装了小米官的驱动的用户，可以先卸载驱动，之后卸载其软件，拔下小米WiFi，再重新将小米WiFi插入电脑按照以上步骤处理就可以了。
+
+win7 上实验成功了，那么，问题来了， 树莓派如何使用呢？（前方高能，非战斗人员请立即撤离： 没有耐心的同学，就不要操作了，太花时间了，耐心都耗完了。。。真的醉了）
+树莓派2安装使用小米WIfi（360 小度 腾讯wifi）
+wKiom1VDpqWQpPgsAAFXNdjugLA074.jpg
+参考这边文章：http://www.cnblogs.com/sjqlwy/p/4415935.html
+截止2015-4-6，本文基于树莓派2，raspbian，内核版本3.18.10-v7+。支持AP（wifi）和STA（无线网卡）模式
+以上免费wifi基于  mt7601u 芯片, 由于360、腾讯、小米都使用的是MT7601芯片，所以它们的代码也是通用的。360wifi 1代的是 rt5370 直接免驱。天猫魔盘是d-link订做的，rtl芯片。
+参考了诸多文章，大多数内核较老，而且由于pi2基于arm7平台，大多编译出来的无法使用。
+
+针对：
+1.驱动程序编译失败
+2.编译成功加载模块时Exec format error(内核头文件与实际运行的内核不匹配)
+一、更新树莓派系统（更新内核后，请重启 reboot）
+
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get dist-upgrade
+sudo rpi-update
+ 
+# 上面的过程很耗时，请耐心等待
+sudo reboot
+二、编译前，准备编译模块需要的内核树（适用于 Pi 1, Pi 2 Raspbian）
+Pi1 and Pi2 Kernels are now supported.
+rpi-source installs the kernel source used to build rpi-update kernels and the kernel on the Raspian image.
+This makes it possible to build loadable kernel modules.
+It is not possible to build modules that depend on missing parts that need to be built into the kernel proper (bool in Kconfig).
+The script uses sudo internally when self-updating and when making the links /lib/modules/$(uname -r)/{build,source}
+Note: rpi-source is supported from Linux version 3.10.37 (when Module.symvers appeared in the repo)
+Install
+sudo wget https://raw.githubusercontent.com/notro/rpi-source/master/rpi-source -O /usr/bin/rpi-source && sudo chmod +x /usr/bin/rpi-source && /usr/bin/rpi-source -q --tag-update
+Run
+rpi-source
+1、下载安装 rpi-source 脚本
+
+sudo wget https://raw.githubusercontent.com/notro/rpi-source/master/rpi-source -O /usr/bin/rpi-source
+sudo chmod +x /usr/bin/rpi-source
+/usr/bin/rpi-source -q --tag-update
+2、运行 rpi-source
+gcc version check
+ERROR:
+gcc version check: mismatch between gcc (4.6.3) and /proc/version (4.7.2)
+Skip this check with --skip-gcc
+rpi-source complains if the major.minor version of gcc differs from the one used to build the kernel.
+Version used to build the kernel
+$ cat /proc/version
+Linux version 3.10.32+ (pi@raspi2) (gcc version 4.7.1 20120402 (prerelease) (crosstool-NG 1.15.2) ) #2 PREEMPT Fri Mar 7 01:33:27 CET 2014
+Current gcc version
+$ gcc --version | grep gcc
+gcc (Debian 4.6.3-14+rpi1) 4.6.3
+Install gcc 4.8
+To get gcc 4.8.3 or higher, add jessie (testing) source:
+
+sudo nano /etc/apt/sources.list.d/jessie.list
+Add this line:
+
+deb http://mirrordirector.raspbian.org/raspbian/ jessie main contrib non-free rpi
+Fetch package lists:
+
+sudo apt-get update
+Install 4.8
+
+sudo apt-get install -y gcc-4.8 g++-4.8
+Note: If you don't use version 4.8.3 or higher, make prepare_modules will likely fail with this error:
+#error Your compiler is too buggy; it is known to miscompile kernels
+Setup gcc versions
+
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.6 20
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 50
+sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.6 20
+sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 50
+Current gcc version
+$ gcc --version
+gcc (Raspbian 4.8.3-5) 4.8.3
+gcc version can be changed with:
+sudo update-alternatives --config gcc
+运行前请保证gcc 和 g++版本为4.8.3+，否则会报错。安装方法参考wiki(https://github.com/notro/rpi-source/wiki)
+
+rpi-source        # 郁闷的地方，等得花儿都谢了
+sudo apt-get install libncurses5-dev
+三、编译驱动程序
+
+STA驱动（普通无线网卡功能）
+下载官方STA驱动并传到树莓派上，方法请参考之前的文章：
+http://yunpan.cn/cVVSuSSCtvscw （提取码：fba0）
+
+# 解压：
+tar xjvf DPO_MT7601U_LinuxSTA_3.0.0.4_20130913.tar.bz2
+cd DPO_MT7601U_LinuxSTA_3.0.0.4_20130913/
+ 
+# 修改common/rtusb_dev_id.c，
+在 {USB_DEVICE(0x148f,0×7601)}, /* MT 6370 */  下面加入以下内容(其他自己添加)：
+{USB_DEVICE(0x148f,0x760b)}, /* 360 Wifi */
+{USB_DEVICE(0x2955,0x1001)}, /* baidu Wifi */
+{USB_DEVICE(0x2a5f,0x1000)}, /* Tencent WiFi */
+{USB_DEVICE(0x2955,0x0001)}, /* XiaoDu Wifi */
+{USB_DEVICE(0x2717,0x4106)}, /* Xiaomi Wifi */
+更新gcc和g++版本后无需修改include/os/rt_linux.h，否则会报错。
+更新gcc和g++版本后无需修改 include/os/rt_linux.h，否则会报错。
+
+# 编译，需要花一些时间
+make
+# 不出错的话就可以安装了
+sudo make install
+ 
+# 加载驱动模块
+sudo modprobe mt7601Usta
+ 
+# 查看是否识别无线网卡(ra0)
+ifconfig
+pi@raspberrypi ~ $ ifconfig
+eth0      Link encap:Ethernet  HWaddr b8:27:eb:84:be:2b
+          inet addr:192.168.3.200  Bcast:192.168.3.255  Mask:255.255.255.0
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:273194 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:183144 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:369181023 (352.0 MiB)  TX bytes:18370971 (17.5 MiB)
+ 
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+ 
+ra0       Link encap:Ethernet  HWaddr 8c:be:be:06:99:23
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:2241 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:561240 (548.0 KiB)  TX bytes:0 (0.0 B)
+# 查看是否正常加载驱动
+lsmod
+pi@raspberrypi ~ $ lsmod
+Module                  Size  Used by
+mt7601Usta            781930  1
+snd_bcm2835            18365  0
+snd_pcm                73475  1 snd_bcm2835
+snd_seq                53078  0
+snd_seq_device          5628  1 snd_seq
+snd_timer              17784  2 snd_pcm,snd_seq
+snd                    51038  5 snd_bcm2835,snd_timer,snd_pcm,snd_seq,snd_seq_device
+uio_pdrv_genirq         2958  0
+uio                     8119  1 uio_pdrv_genirq
+# 查看ra0是否工作正常
+sudo iwlist ra0 scan
+ 
+编辑文件/etc/network/interfaces,添加
+auto ra0            # ra0 就是我们新增的那块无线网卡
+allow-hotplug ra0
+iface ra0 inet dhcp
+wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+iface default inet dhcp
+ 
+增加wifi接入点信息，编辑文件/etc/wpa_supplicant/wpa_supplicant.conf
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+network={
+    ssid="无线网名字"        # 必须用双引号括起来
+    psk="WIFI密码"
+    key_mgmt=WPA-EAP WPA-PSK IEEE8021X NONE
+    pairwise=TKIP CCMP
+    group=CCMP TKIP WEP104 WEP40
+    auth_alg=OPEN
+}
+ 
+# 启动无线网卡
+ifup ra0
+ 
+# 或者重启。
+sudo reboot 
+ 
+驱动安装完后，重启一下树莓派，使用ifconfig -a 命令查看一下是否有新的网卡出现。
+不要根据lsusb进行判断，我在这个上耽误好久，反复编译，总以为没安装好。
+如果无线网卡没有启动：
+ifup ra0
+ 
+pi@raspberrypi ~ $ sudo ifdown ra0
+Internet Systems Consortium DHCP Client 4.2.2
+Copyright 2004-2011 Internet Systems Consortium.
+All rights reserved.
+For info, please visit https://www.isc.org/software/dhcp/
+ 
+Listening on LPF/ra0/8c:be:be:06:99:23
+Sending on   LPF/ra0/8c:be:be:06:99:23
+Sending on   Socket/fallback
+pi@raspberrypi ~ $ sudo ifup ra0
+Internet Systems Consortium DHCP Client 4.2.2
+Copyright 2004-2011 Internet Systems Consortium.
+All rights reserved.
+For info, please visit https://www.isc.org/software/dhcp/
+ 
+Listening on LPF/ra0/8c:be:be:06:99:23
+Sending on   LPF/ra0/8c:be:be:06:99:23
+Sending on   Socket/fallback
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 3
+DHCPDISCOVER on ra0 to 255.255.255.255 port 67 interval 6
+DHCPREQUEST on ra0 to 255.255.255.255 port 67
+DHCPOFFER from 192.168.3.254
+DHCPACK from 192.168.3.254
+bound to 192.168.3.104 -- renewal in 38222 seconds.
+终于成功了，泪奔。。。j_0065.gifj_0016.gif
+
+/etc/wpa_supplicant/wpa_supplicant.conf 文件配置有错误，导致一直不能获取IP。。。
+ 
+pi@raspberrypi ~ $ sudo ifup ra0
+wpa_supplicant: /sbin/wpa_supplicant daemon failed to start
+run-parts: /etc/network/if-pre-up.d/wpasupplicant exited with return code 1
+Internet Systems Consortium DHCP Client 4.2.2
+Copyright 2004-2011 Internet Systems Consortium.
+All rights reserved.
+For info, please visit https://www.isc.org/software/dhcp/
+
+在树莓派上使用360WIFI(也适用于小米、百度、腾讯WIFI)， 这种方式稍微简单
+没有测试， 谨慎操作。
+直接来重点吧， 2代与1代的区别很重要的一点就是Module7.symvers这个文件。
+
+sudo nano /etc/apt/sources.list.d/jessie.list
+deb http://mirrordirector.raspbian.org/raspbian/ jessie main contrib non-free rpi
+ 
+ 
+更新系统，更新内核后再编译
+$ sudo -s
+# apt‐get update
+# apt‐get upgrade
+# rpi-update        # 可能会执行失败，多试几次
+ 
+root@raspberrypi:/home/pi# rpi-update
+ *** Raspberry Pi firmware updater by Hexxeh, enhanced by AndrewS and Dom
+ *** Performing self-update
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  9823  100  9823    0     0    833      0  0:00:11  0:00:11 --:--:--  2395
+ *** Relaunching after update
+ *** Raspberry Pi firmware updater by Hexxeh, enhanced by AndrewS and Dom
+ *** We're running for the first time
+ *** Backing up files (this will take a few minutes)
+ *** Backing up firmware
+ *** Backing up modules 3.18.7-v7+
+ *** Downloading specific firmware revision (this will take a few minutes)
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   168    0   168    0     0     72      0 --:--:--  0:00:02 --:--:--    89
+100 46.1M  100 46.1M    0     0  62604      0  0:12:52  0:12:52 --:--:--  953k
+ *** Updating firmware
+ *** Updating kernel modules
+ *** depmod 3.18.12-v7+
+ *** depmod 3.18.12+
+ *** Updating VideoCore libraries
+ *** Using HardFP libraries
+ *** Updating SDK
+ *** Running ldconfig
+ *** Storing current firmware revision
+ *** Deleting downloaded files
+ *** Syncing changes to disk
+ *** If no errors appeared, your firmware was successfully updated to 3ae7fd5bb0d2d34f7793f76c8a242ee177fafb3d
+ *** A reboot is needed to activate the new firmware
+ 
+# reboot
+ 
+$ uname -r
+3.18.12-v7+
+ 
+取得root权限， 下面的操作都是以 root 身份来执行
+$ sudo -s
+ 
+下载对应版本的Linux源码
+$ wget https://github.com/raspberrypi/linux/archive/rpi-3.18.y.tar.gz
+$ tar xvfz rpi-3.18.y.tar.gz
+ 
+# mv linux-rpi-3.18.y /usr/src
+#  cd  /usr/src/linux-rpi-3.18.y
+建立内核模块库目录的链接
+# ln -s /usr/src/linux-rpi-3.18.y  /lib/modules/$(uname -r)/build
+#  cd /lib/modules/$(uname -r)/build
+ 
+### make mrproper可以看作更加强劲的 # make clean 命令，用来清除环境变量，即清除配置文件，一般编译内核前都要运行
+# make mrproper
+ 
+将当前正在使用的系统的内核配置生成内核配置信息
+# gzip -dc /proc/config.gz > .config
+ 
+生成编译内核所需要的东西
+# make modules_prepare
+ 
+##### 
+下载 symvers文件，获取内核编译时生成的内核模块导出符号文件,因为不是从头编译内核，所以没有，但是编译内核模块需要这个
+这是最重要的一步， 注意版本
+1代： wget https://github.com/raspberrypi/firmware/raw/master/extra/Module.symvers
+树莓派1代 和 2代文件不一样，二代的名字是 Module7.symvers, 下载下来以后要改名字，千万别忘了
+Module.symvers如果在arm7上，要下载Module7.symvers。
+##### 
+2 代
+# wget https://raw.github.com/raspberrypi/firmware/master/extra/Module7.symvers
+# cp Module7.symvers  Module.symvers
+ 
+### 上面就是内核部分
+ 
+MT7601的Linux驱动编译操作
+下载驱动 http://www.mediatek.com/zh-CN/downloads/mt7601u--usb/
+上传并解压到树莓派上， 修改DPO_MT7601U_LinuxSTA_3.0.0.4_20130913/common/rtusb_io.c文件
+$ tar xjvf DPO_MT7601U_LinuxSTA_3.0.0.4_20130913.tar.bz2
+$ cd DPO_MT7601U_LinuxSTA_3.0.0.4_20130913/
+$ nano common/rtusb_dev_id.c
+ 
+在 {USB_DEVICE(0x148f,0x7601)}, /* MT 6370 */ 下面加入以下内容
+{USB_DEVICE(0x148f,0x760b)}, /* 360 Wifi */
+{USB_DEVICE(0x2955,0x1001)}, /* baidu Wifi */
+{USB_DEVICE(0x2a5f,0x1000)}, /* Tencent WIFI */
+{USB_DEVICE(0x2955,0x0001)}, /* XiaoDu Wifi */
+{USB_DEVICE(0x2717,0x4106)}, /* Xiaomi Wifi */
+ 
+打开include/os/rt_linux.h，找到
+int fsuid;
+int fsgid;
+改成
+kuid_t fsuid;
+kgid_t fsgid;
+ 
+回到DPO_MT7601U_LinuxSTA_3.0.0.4_20130913目录
+ 
+再到网卡驱动目录中编译驱动（进入到DPO_MT7601U_）
+# make
+如果无报错，就可以执行下两部，驱动就安装完成了。
+# make install
+# sudo modprobe mt7601Usta
+ 
+设置使用无线网卡
+vi /etc/network/interfacing
+auto lo
+iface lo inet loopback
+iface eth0 inet dhcp
+auto ra0
+allow-hotplug ra0
+iface ra0 inet dhcp
+wpa-ssid 无线SSID
+wpa-psk 无线密码
+ 
+这样总算完成了(这样只有360wifi2 的无线网卡功能，只能连接无线网(无线网卡)，不能使用AP功能)；
+重启 reboot。
+
+挂载移动硬盘或U盘
+
+    树莓派外接U盘或移动硬盘时，默认不会自动挂载，需要手动 mount。
+挂载NTFS格式的硬盘(读写方式挂载)
+默认挂载NTFS格式的硬盘只有只读权限，需要借助其它工具实现。
+
+#安装所需软件包
+sudo apt-get install fuse-utils ntfs-3g
+#加载内核模块
+modprobe fuse
+#编辑fstab让移动硬盘开机自动挂载
+sudo nano /etc/fstab
+#在最后一行添加如下内容
+/dev/sda1 /mnt/myusbdrive ntfs-3g defaults,noexec,umask=0000 0 0
+#保存重启，即可生效
+挂载FAT32格式的硬盘（U盘通常是这种格式）
+
+#创建挂载点
+sudo mkdir /mnt/myusbdrive
+#编辑fstab让移动硬盘开机自动挂载
+sudo nano /etc/fstab
+#在最后一行添加如下内容
+/dev/sda1 /mnt/myusbdrive auto defaults,noexec,umask=0000 0 0
+#保存重启，即可生效
+树莓派作DNS服务器（dnsmasq）
+
+将DNS公共查询服务器架设在树莓派上面，常用的DNS查询将会缓存到树莓派上，能起到DNS查询加速、提升上网体验的作用。本文将以开源的轻量级DNS转发服务程序 DNSMASQ 为基础实现这个功能。
+  DNSmasq是一个小巧且方便地用于配置DNS和DHCP的工具，适用于小型网络，它提供了DNS功能和可选择的DHCP功能。它服务那些只在本地适用的域名，这些域名是不会在全球的DNS服务器中出现的。DHCP服务器和DNS服务器结合，并且允许DHCP分配的地址能在DNS中正常解析
+1、首先安装 dnsmasq 
+
+sudo apt-get install -y dnsmasq
+2、配置
+下面我们就需要配置DNSMASQ了，配置文件一般位于路径/etc/dnsmasq.conf。
+这个是 dnsmasq 使用的配置文件。安装 dnsmasq 完后就会生成一个，里面有很详细的说明和例子，但是都是注释的，也就是等于这个是一个空的文件，你可以把这个文件做一个备份，然后新建一个空白的文件，只写你需要的配置就可以。这样看上去比较清晰一些，不然总是在一大堆 E 文里找你想要的东西也是很麻烦的，特别是英文不好的，看着头疼。
+listen-address=127.0.0.1
+strict-order
+#no-hosts
+#no-poll
+resolv-file=/etc/resolv.dnsmasq.conf
+
+#反电信劫持－114导航
+bogus-nxdomain=218.30.64.194
+#bogus-nxdomain=67.215.66.132
+# Set the cachesize here.
+cache-size=2048
+
+#国内指定DNS
+server=/cn/114.114.114.114
+server=/taobao.com/114.114.114.114
+server=/taobaocdn.com/114.114.114.114
+server=/tbcache.com/114.114.114.114
+server=/tdimg.com/114.114.114.114
+server=/weibo.com/114.114.114.114
+server=/weibo.cn/114.114.114.114
+server=/xunlei.com/114.114.114.114  
+    
+#国外指定DNS
+server=/google.com/42.120.21.30
+server=/twitter.com/42.120.21.30
+server=/facebook.com/42.120.21.30  
+    
+#host区段
+#本机
+address=/tp.set/192.168.2.1
+address=/dx.set/192.168.1.1
+      
+#其他
+address=/t66y.com/184.154.128.246
+#address=/github.com/192.30.252.131
+比较关键的几个参数：
+resolve-file指定dnsmasq从哪里获取上行DNS Server， 默认是从/etc/resolv.conf获取。
+addn-hosts指定dnsmasq从哪个文件中读取“地址 域名”记录， 默认是系统文件/etc/hosts；
+listen-address默认是监控在所有网卡上的。
+配置步骤：
+配置 dnsmasq 的上游 dns 服务器;(dnsmasq是 dns 缓存服务器, 那么其还是需要有上游服务器进行域名解析的)
+配置系统的 dns 服务器, 将 dnsmasq 设置在首位寻找
+设置 dnsmasq 需要监听的 IP 地址, 让其他服务器能够找到它
+在/etc目录下新建resolv.dnsmasq文件。 文件的内容为DNS服务器的地址，是真正的DNS服务器。
+resolv-file=/etc/resolv.dnsmasq 
+strict-order 取消注释表示严格安装 resolv-file 文件中的顺序从上到下进行 DNS 解析, 直到第一个成功解析成功为止。
+wKioL1VF9Hqh43vkAAFJxs5A68M665.jpg
+no-hosts, 默认情况下这是注释掉的, dnsmasq 会首先寻找本地的 hosts 文件，再去寻找缓存下来的域名, 最后去上游 dns 服务器寻找；
+addn-hosts 可以指定多个额外的hosts文件。
+wKiom1VF8w2wEIaJAACfGqa5M4M117.jpg
+listen-address=127.0.0.1  # 参数：例如, 我还需要让局域网内其他的服务器也能够首先访问这个 dnsmasq 来进行域名解析如何配置? listen-address=192.168.1.100 (dnsmasq 所在服务器局域网内 ip), 好吧, 这样你本机配置的 127.0.0.1 就没效果了… 如果设置为 listen-address=127.0.0.1 启用本地解析，那局域网内其他服务器就无法访问到这个 dnsmasq 了, 只有对本机才有效。其实应该这样设置 listen-address=192.168.1.100,127.0.0.1 这样你就能双方都满足了，既能为其他主机提供DNS解析服务，对自己也可以解析。定义 dnsmasq 监听的地址，一般写本地就可以，如果是需要共享给局域网的其他电脑，需要把本机的内网 IP 地址写进来，例如 listen-address=192.168.1.101,127.0.0.1
+要在单台电脑上以守护进程方式启动dnsmasq做DNS缓存服务器，编辑/etc/dnsmasq.conf，添加监听地址：
+listen-address=127.0.0.1
+如果用此主机为局域网提供默认 DNS，请用为该主机绑定固定 IP 地址，设置：
+listen-address=192.168.x.x
+server=/cn/114.114.114.114 # 所有 cn 域名和子域名的解析都由 114.114.114.114 来处理，这样可以把国内国外的域名分别交给不同的 dns 服务器来处理。
+address=/domain.name/192.168.1.102 # 把 domain.name 这个域名解析到 192.168.1.102 。这个功能很好玩，有几个比较常用的场景，一个是做内网的域名解析，你可以把任意你想要的域名解析到局域网内的某个服务器上，这样局域网内的其他电脑就不需要手动输入难记的 IP 地址了。另外，你可以把一些广告商的域名解析到 127.0.0.1 ，这样你就不用被满屏的广告打扰了。当然，你可以把一些国外的网站指向一个没有被墙的 IP 上，这样也可以实现翻墙，虽然不一定有效。
+
+基本上配置文件内容如下所示：
+
+# Dnsmasq.conf for raspberry pi
+# /etc/dnsmasq.conf
+# http://www.thekelleys.org.uk/dnsmasq/docs/dnsmasq.conf.example
+  
+# Set up your local domain here
+domain=raspberry.local
+resolv-file=/etc/resolv.dnsmasq
+min-port=4096
+server=8.8.8.8
+server=8.8.4.4
+  
+# Max cache size dnsmasq can give us, and we want all of it!
+cache-size=10000
+  
+# DHCP
+# Below are settings for dhcp. Comment them out if you dont want
+# dnsmasq to serve up dhcpd requests.
+# dhcp-range=192.168.0.100,192.168.0.149,255.255.255.0,1440m
+# dhcp-option=3,192.168.0.1
+# dhcp-authoritative
+# dhcp range 指定DHCP服务提供地址范围，以及租期为 1440m
+# dhcp-option 指定了默认网关
+ 
+ 
+# 在所有网卡上关闭 DHCP，用不着这个功能。如果有多个网卡那么一行一个。
+# no-dhcp-interface=eth0
+如果你改动过设置，请重启服务：
+
+sudo service dnsmasq restart
+这里的server所指示的就是上级DNS服务器的地址，这里用的是Google的8.8.8.8和8.8.4.4，也就是说本地缓存查不到的域名将会发送给上级DNS服务器然后本地再缓存结果，可以改成你所需要的，一般就用谷歌的，我就不改了:-)， 需要注意的是较老版本中这个使用的名字是nameserver。
+
+到这里基本上就配置完成了，你可以在树莓派上nslookup或者dig一下看看结果，当然如果找不到这些命令是因为你没有安装dnsutils，直接通过下面的命令安装即可：
+
+sudo apt-get install dnsutils
