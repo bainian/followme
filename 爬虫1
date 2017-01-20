@@ -1,0 +1,42 @@
+import re
+import urllib.request
+
+url = "http://mall.csdn.net/coin"
+savePath = "/home/sage/temp/pic/"
+
+
+def getHtml(url):
+    page = urllib.request.urlopen(url)
+    html = page.read().decode("utf-8")
+    return html
+
+
+def getImg(html):
+    reg = r"http:\/\/img.bss.csdn.net\/[0-9]+.jpg"
+    imgre = re.compile(reg)
+    imglist = re.findall(imgre, html)
+    return imglist
+
+
+def getFilename(url):
+    reg = r"[a-z0-9]\.jpg"
+    matchObj = re.search(reg, url)
+    if matchObj:
+        return matchObj.group()
+    pass
+
+
+def saveImg(url):
+    conn = urllib.request.urlopen(url)
+    file = open(savePath + getFilename(url), "wb")
+    file.write(conn.read())
+    file.close()
+    return
+
+
+html = str(getHtml(url))
+imgUrls = getImg(html)
+
+for imgUrl in imgUrls:
+    print(imgUrl)
+    saveImg(imgUrl)
