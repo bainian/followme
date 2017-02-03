@@ -1,0 +1,46 @@
+http://bbs.25pp.com/thread-502705-1-1.html
+
+有网友分享了一个在 macOS Sierra 系统中打开原生 NTFS 读写功能的操作方法，并且表示已经测试成功。
+
+　　日前，一位名叫 liuropot 的网友分享了一个在 macOS Sierra 系统中打开原生 NTFS 读写功能的操作方法，并且表示这个方法已经在 macOS Sierra 系统上测试成功，下面我们来了解一下具体情况。
+
+
+ e9b6cdeadc5011e697a204275857d174.jpg
+
+　　第一步：打开窗口终端输入以下命令：
+
+　　diskutil list
+
+　　查看磁盘信息，与 NAME 对应的就是 NTFS 分区的卷标，比如大写的 C、D、E、F。
+
+
+ e9bb2b24dc5011e697a204275857d174.jpg
+
+　　第二步：查看 /etc/fstab 文件，这是一个配置文件系统的文本文件，建议用记事本修改，输入以下命令：
+
+　　sudo nano /etc/fstab
+
+　　然后输入系统密码，没有密【***】直接就跳过，显示的就是这个文件的内容。
+
+　　第三步：输入下列代码：
+
+　　LABEL=C none ntfs rw,auto,nobrowSE
+
+　　LABEL=D none ntfs rw,auto,nobrowse
+
+　　LABEL=E none ntfs rw,auto,nobrowse
+
+　　LABEL=F none ntfs rw,auto,nobrowse
+
+　　输入完成后按 Ctrl+X，记事本会询问是否保存，选择 Y 然后按下回车键退出。
+
+
+ e9bc51f2dc5011e697a204275857d174.jpg
+
+　　需要注意的是，以上代码以 C、D、E、F 为，坛友可以替换为自己的分区卷标名称，有几个分区就写几行。如果卷标有空格，请用 代替， 就是空格的意思。
+
+　　第四步：弹出移动硬盘，然后在磁盘工具里一一再挂上。
+
+　　第五步：输入 ln 命令挂载硬盘卷标(如果不进行这一步，可能不会在 Finder 中显示)：
+
+　　sudo ln -s /Volumes ~/Desktop/Volumes
