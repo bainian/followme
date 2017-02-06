@@ -1,0 +1,8 @@
+Android开发者指南(Android Developer Guides): http://d.android.com
+用AOSP源代码开展工作(Working with AOSP source): http://source.android.com
+平台开发者指南(Platform Developer Guide): http://pdk.android.com
+Android Git网页版(Android Gitweb): http://android.git.kernel.org
+Git Ready (Git的一些技巧和提示): http://www.gitready.com/
+编译CyanogenMod: http://wiki.cyanogenmod.com/index.ph...ng_from_source
+Dexopt是如何起作用的，那些odex文件又是什么？: http://android.git.kernel.org/?p=pla...5936;hb=master
+
