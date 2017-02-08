@@ -1,0 +1,31 @@
+
+java io 操作类，为了匹配不同的输入输出对象如缓冲区，控制台，文件，网络，采用装饰模式构造了诸多io的类来完成此功能。
+
+InputStream inputStream;
+FilterInputStream filterInputStream;
+DataInputStream dataInputStream;
+ByteArrayInputStream byteArrayInputStream;
+StringBufferInputStream stringBufferInputStream;
+FileInputStream fileInputStream;
+LineNumberInputStream lineNumberInputStream;
+BufferedInputStream bufferedInputStream;
+
+PipedInputStream pipedInputStream;
+SequenceInputStream sequenceInputStream;
+
+
+OutputStream outputStream;
+FilterOutputStream filterOutputStream;
+ByteArrayOutputStream byteArrayOutputStream;
+FileOutputStream fileOutputStream;
+PipedOutputStream pipedOutputStream;
+
+一些有趣的新知：
+BufferedInputStream 避免每次想要更多数据时都进行物理性的读取,告诉它“请先在缓冲区里找” InputStream,没有可选的缓冲区大小/本身并不能提供一个接口,只是发出使用缓冲区的要求。要求同一个接口对象连接到一起。
+若想进行一些真正的格式化输出,比如输出到控制台,请使用PrintStream.
+PrintStream 用于产生格式化输出。DataOutputStream控制的是数据的“存储”,而PrintStream控制的是“显示”.
+我们有时要在其他类型的数据流中搜索,比如一个ByteArrayInputStream,但搜索方法只有RandomAccessFile才会提供。而后者只能针对文件才能操作,不能针对数据流操作。此时,BufferedInputStream确实允许我们标记一个位置(使用mark(),它的值容纳于单个内部变量中),并用reset()重设那个位置。但这些做法都存在限制,并不是特别有用。
+File类有一个欺骗性的名字——通常会认为它对付的是一个文件,但实情并非如此。它既代表一个特定文件的名字,也代表目录内一系列文件的名字。若代表一个文件集,便可用list()方法查询这个集,返回的是一个字串数组。之所以要返回一个数组,而非某个灵活的集合类,是因为元素的数量是固定的。而且若想得到一个不同的目录列表,只需创建一个不同的File对象即可。事实上,“FilePath”(文件路径)似乎是一个更好的名字。
+
+
+
