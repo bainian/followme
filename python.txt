@@ -5,3 +5,13 @@ print(r.text)
 
 下载一个网站：
 wget -c -r -np -k -L -p --restrict-file-names=utf-8 http://www.baidu.com
+
+一些方法 ：
+from operator iport itemgetter
+
+L = [('Bob', 75), ('Adam', 92), ('Bart', 66), ('Lisa', 88), ("Fish", 99)]
+print(sorted(L, key=itemgetter(0)))
+print(sorted(L, key=lambda t: t[1]))
+print(sorted(L, key=itemgetter(1), reverse=True))
+
+
