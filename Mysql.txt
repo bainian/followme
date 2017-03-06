@@ -1,0 +1,13 @@
+deepin install log:
+
+2017-03-06T09:37:01.585674Z 0 [Warning] TIMESTAMP with implicit DEFAULT value is deprecated. Please use --explicit_defaults_for_timestamp server option (see documentation for more details).
+2017-03-06T09:37:01.899237Z 0 [Warning] InnoDB: New log files created, LSN=45790
+2017-03-06T09:37:01.960156Z 0 [Warning] InnoDB: Creating foreign key constraint system tables.
+2017-03-06T09:37:02.021131Z 0 [Warning] No existing UUID has been found, so we assume that this is the first time that this server has been started. Generating a new UUID: 73b8abf3-0250-11e7-9a01-3464a9396b7b.
+2017-03-06T09:37:02.023034Z 0 [Warning] Gtid table is not ready to be used. Table 'mysql.gtid_executed' cannot be opened.
+2017-03-06T09:37:02.023659Z 1 [Note] A temporary password is generated for root@localhost: wUjsO4#B6COM
+
+https://www.widlabs.com/article/mac-os-x-install-mysql-with-tar-gz
+
+http://www.linuxidc.com/Linux/2008-02/11137.htm
+http://www.cnblogs.com/xusir/p/3334217.html
