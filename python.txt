@@ -14,4 +14,50 @@ print(sorted(L, key=itemgetter(0)))
 print(sorted(L, key=lambda t: t[1]))
 print(sorted(L, key=itemgetter(1), reverse=True))
 
+重写的一些方法及作用：
+python decorator:
+def function(args):
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kw):
+            print('ok')
+            return func(*args, **kw)
+        return wrapper
+    return decorator
 
+__init__ 初始化
+__var 私有变量 private
+__slots__ 限制类变量范围
+@property 把一个getter方法娈成属性，只需要加上@property就可以了，此时，@property本身又创建了另一个装饰器@score.setter，负责把一个setter方法变成属性赋值
+>>> s = Student()
+>>> s.score = 60 # OK，实际转化为s.set_score(60)
+>>> s.score
+
+
+__len__()方法会作用于len()函数
+__str__ print(var)会打印出的
+__repr__ 直接变量时的输出
+__iter__ 实例本身就是可迭代对象，返回迭代的对象，然后当迭代时会调用其中的__next__方法
+__getitem__ 可按下标取出值对应的还有 __setitem__
+__getattr__ 当找不到该属性时会调用这个方法，
+__call__ 一个对象实例可以有自己的方法，可以用callable()来判断一个对象是否是“可调用”对象。
+>>> s = Student('Michael')
+>>> s() # self参数不要传入
+__new__ 元类，metaclass type()
+
+file r w a b +
+
+
+ａa = "如何是".encode(encoding='unicode-escape')
+aa = b'\\u5982\\u4f55\\u662f'
+cc = aa.decode('unicode-escape')
+cc = '如何是'
+
+
+from lxml import etree
+
+ｓ = etree.HTML(html)
+s.xpath('//a[starts-with(@href,"http")]//text()')
+
+xart: generate art ascii texts 生成一个ａｓｃｉｉ的字符
+ 
