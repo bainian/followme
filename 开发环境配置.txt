@@ -1,2 +1,16 @@
 你可以使用我们定制的 cnpm (gzip 压缩支持) 命令行工具代替默认的 npm:
 npm install -g cnpm --registry=https://registry.npm.taobao.org
+更新pip的所有包
+import pip
+from subprocess import call
+for dist in pip.get_installed_distributions():
+call("pip install --upgrade " + dist.project_name, shell=True)
+
+安装软件
+apt-get install ***
+easy_install ***
+npm install ***
+cnpm install ***
+spkg -i ***
+pip install ***
+brew install ***

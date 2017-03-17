@@ -1,5 +1,6 @@
 from ghost import Ghost
+from ghost import Session
 
 ghost = Ghost()
-page, extra_resources = ghost.open("http://jeanphi.fr")
-assert page.http_status == 200 and 'jeanphix' in ghost.content
+se = Session(ghost, display=True)
+se.open('http://www.baidu.com')
