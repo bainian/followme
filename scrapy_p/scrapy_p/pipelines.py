@@ -4,8 +4,23 @@
 #
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
+import json
 
 
 class ScrapyPPipeline(object):
+    def __init__(self):
+        self.file = open('item.jl', 'wb')
+
     def process_item(self, item, spider):
+        line = json.dumps(dict(item)) + "\n"
+        self.file.write(line)
         return item
+
+    def open_spider(self, spider):
+        print(spider)
+
+    def close_spider(self, spider):
+        pass
+
+    def from_crawler(self, crawler):
+        pass

@@ -1,8 +1,9 @@
 import scrapy
+from scrapy.crawler import CrawlerProcess
+
+from scrapy_p.items import BlogItem
 
 
-# Spider是用户编写用于从单个网站(或者一些网站)爬取数据的类。其包含了一个用于下载的初始URL，
-# 如何跟进网页中的链接以及如何分析页面中的内容， 提取生成 item 的方法
 class DmozSpider(scrapy.Spider):
     name = 'dmoz'  # 用于区别Spider。 该名字必须是唯一的，您不可以为不同的Spider设定相同的名字
     allowed_domains = ['dmoz.org']
@@ -13,16 +14,71 @@ class DmozSpider(scrapy.Spider):
     # 提取数据(生成item)以及生成需要进一步处理的URL的 Request 对象。
     def parse(self, response):  # Request对象经过调度，执行生成 scrapy.http.Response 对象并送回给spider parse() 方法
         filename = response.url.split('/')[-2]
-        with open(filename, 'wb') as f:
-            f.write(response.url.encode('utf-8'))
-            f.write(response.body)
+        self.log(filename)
+        yield filename
 
-        for sel in response.xpath('//ul/li'):
-            title = sel.xpath('a/text()').extract()
-            link = sel.xpath('a/@href').extract()
-            desc = sel.xpath('text()').extract()
-            item = DmozItem()
-            item['title'] = title
-            item['link'] = link
-            item['desc'] = desc
+        for url in response.xpath('*//a/@href').extract():
+            self.log(url)
+            yield scrapy.Request(url, callback=self.parse)
+
+            # with open(filename, 'wb') as f:
+            #     f.write(response.url.encode('utf-8'))
+            #     f.write(response.body)
+
+            # for sel in response.xpath('//ul/li'):
+            #     title = sel.xpath('a/text()').extract()
+            #     link = sel.xpath('a/@href').extract()
+            #     desc = sel.xpath('text()').extract()
+            #     item = DmozItem()
+            #     item['title'] = title
+            #     item['link'] = link
+            #     item['desc'] = desc
+            #     yield item
+
+
+class BlogSpider(scrapy.Spider):
+    name = 'blog'
+    allowed_domains = ['blog.csdn.net']
+    start_urls = ['http://blog.csdn.net/luoshengyang']
+
+    def parse(self, response):
+        file_name = response.xpath('//div[@id="blog_title"]/h2/a/text()').extract()[0]
+        print(file_name)
+        titles = response.xpath('//div[@id="article_list"]//span[@class="link_title"]//a/text()').extract()
+        descs = response.xpath('//div[@id="article_list"]//div[@class="article_description"]/text()').extract()
+        links = response.xpath('//div[@id="article_list"]//span[@class="link_title"]//a/@href').extract()
+        # title2 = []
+        # desc2 = []
+        # link2 = []
+        # for tt in titles:
+        #     title2.append(tt.strip())
+        # for dd in descs:
+        #     desc2.append(dd.strip())
+        # for ll in links:
+        #     link2.append(ll.strip())
+        # with open(file_name.strip(), 'wb') as f:
+        #     f.write(file_name.encode('utf-8'))
+        #     f.write('\t\n'.encode('utf-8'))
+        #     f.write(str(title2).encode('utf-8'))
+        #     f.write('\t\n'.encode('utf-8'))
+        #     f.write(str(desc2).encode('utf-8'))
+        #     f.write('\t\n'.encode('utf-8'))
+        #     f.write(str(link2).encode('utf-8'))
+
+        for title, desc, link in zip(titles, descs, links):
+            item = BlogItem()
+            item['title'] = title.strip()
+            item['link'] = response.urljoin(link.strip())
+            item['desc'] = desc.strip()
+            # self.log('item', item)
+            self.logger.info('item', item)
             yield item
+        next_page = response.urljoin(response.xpath('//*[@id="papelist"]/a[text()="下一页"]/@href').extract()[0])
+        print(next_page)
+        yield scrapy.Request(next_page, callback=self.parse)
+
+
+process = CrawlerProcess()
+process.crawl(DmozSpider)
+process.crawl(BlogSpider)
+process.start()

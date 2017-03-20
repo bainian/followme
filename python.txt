@@ -62,4 +62,6 @@ s.xpath('//a[starts-with(@href,"http")]//text()')
 xart: generate art ascii texts 生成一个ａｓｃｉｉ的字符
 
 py ghost.py 一个webkit可以运行网页，获取数据 也可以做一个网站
+
+strAll = "{0}, {1}".format(i, j) 格式化
  
