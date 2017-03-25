@@ -956,3 +956,106 @@ sudo service dnsmasq restart
 到这里基本上就配置完成了，你可以在树莓派上nslookup或者dig一下看看结果，当然如果找不到这些命令是因为你没有安装dnsutils，直接通过下面的命令安装即可：
 
 sudo apt-get install dnsutils
+
+
+======================================================================================================
+http://blog.csdn.net/misiter/article/details/7494604
+
+SCIM应该是最好的中文输入法了，它与搜狗差不多，下面介绍它的安装方法：
+　　1)终端输入：sudo apt-get remove scim
+
+　　这一步是删除安装系统的时候装的那个scim，实际是个假的，我这里不可以用
+
+　　2）sudo apt-get install scim
+
+　　这一步安装scim输入法。完了系统会自己装上，中间会有提示，直接y就行了
+
+　　3）sudo apt-get install scim-chinese
+
+　　这一步是安装中文输入法，前面那一步只是下载一个可以运行输入法的平台，现在是在这个具体平台上安装中文输入
+
+　　4) sudo gedit /etc/X11/Xsession.d /95xinput
+
+　　这个步骤是新建一个95xinput的文件，该文件的具体内容如下：
+
+　　/usr/bin/scim -d
+
+　　XMODIFIERS="@im=SCIM"
+
+　　export XMODIFIERS
+
+　　export GTK_IM_MODULE=scim
+
+　　把以上内容复制到新建的95xinput文件中，然后，确定无误后，保存，退出gedit编辑器
+
+　　5）exit 退出终端
+
+　　6）Logout，重新登录，然后用Ctrl+Space就可以激活中文输入法啦
+
+最近开始学习Linux，现开始一点点的做个笔记。下为在Ubuntu系统中安装SCIM 中文输入法的过程。相较于Windows下的输入法安装，这个过程对一般人来说显然烦了不少，特别是在别人不熟悉的情况下。从这点来看，Linux想要普及大众，还真得再加把劲了。
+
+1. 安装SCIM
+
+SCIM 其实只是一个输入法平台。最近发布的Ubuntu系统默认安装完成都已经安装好了SCIM，对于没有安装SCIM的Linux系统，只要输入下面的命令也就可以安装了
+
+sudo apt-get install scim
+
+（前提是要设置好安装源地址，具体见http://wiki.ubuntu.org.cn/%E5%BF%AB%E9%80%9F%E8%AE%BE%E7%BD%AE%E6%8C%87%E5%8D%97, 有些高校自己内部也有源的，好好找找）
+
+2. 安装输入法
+
+因为SCIM只是一个输入法平台，还要在上面安装输入法（或者码表）。例如，下面的命令可以安装上智能拼音输入法
+
+sudo apt-get install scim-chinese
+
+如果使用五笔，就要安装scim-tables-zh，命令如下：
+
+sudo apt-get install scim-tables-zh
+
+这样同时也安装了二笔，仓颉之类的输入法，可以scim设置中将不用的输入法关闭，将需要用的输入法，如拼音，五笔激活。不然切换时会很辛苦。
+
+3. 修改locale
+
+根据SCIM的文档说明，装SCIM最好用UTF-8的locale。（你也可以使用GB2312以及GBK的locale，使用scim都一样的）
+对于装好的系统如果设置语言为中文，则默认SCIM使用的就是UTF-8的locale（这样也才能输入中文）。
+如果选择其他的系统语言，则需要修改locale
+
+方法如下：
+利用Gedit打开 /etc/environment 文件，命令为：
+
+sudo gedit /etc/environment
+
+把LANG = en_US （其他语言不同）改为
+LANG=en_US.UTF-8 或者 LANG=zh_CN.UTF-8
+
+4. 配置文件
+
+完成了以上步骤，在使用之前还要先配置一个文件，配置方法很简单，在/etc/X11/Xsession.d/里新建一个名叫95xinput的文件，命令为：
+
+sudo gedit /etc/X11/Xsession.d/95xinput
+
+在其中添加如下内容：
+
+/usr/bin/scim -d # ??
+export XMODIFIERS=@im=SCIM # 设置应用于所有的X应用程序
+export GTK_IM_MODULE=scim # 设置GTK的默认输入
+export QT_IM_MODULE=scim # 设置QT的默认输入
+
+注：建议按以上所示加上最后两行，即使必须的支持可能在你现有的系统中不存在，因为对你的系统并不没有什么影响。
+
+确认内容无误后，保存文件。
+
+5. 重启X Window
+
+方法：退出X后运行exit命令重新login一次，再进入X的时候就可以用Ctrl+Space调出SCIM了，或者直接Ctrl+Alt+Backspace。
+
+补充：
+在GTK中使用SCIM
+
+虽然在以上配置中有了对GTK的支持，但想要在GTK中使用还需要安装一个模块scim-gtk2-immodule，命令如下：
+
+sudo apt-get install scim-gtk2-immodule
+
+（这个命令会根据依赖关系自动安装 scim-server-socket, scim-frontend-socket, scim-config-socket，如果没有安装scim，也会自动安装）
+
+安装后无须重启X，只要重新打开基于GTK的软件就可以使用SCIM了！
