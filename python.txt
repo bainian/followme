@@ -64,4 +64,18 @@ xart: generate art ascii texts 生成一个ａｓｃｉｉ的字符
 py ghost.py 一个webkit可以运行网页，获取数据 也可以做一个网站
 
 strAll = "{0}, {1}".format(i, j) 格式化
+
+
+
+字体编码：
+单个字符：ord()得到unicode字符集编码号，chr()根据unicode编码得到一个内存中的字符。
+字符串：内存变量类型是str，一个字符对应几个字节，在保存与传输时转换为用b'str'的bytes类型，bytes的每个字符占一个字节。
+以unicode表示的str通过encode()方法可以编码为指定的bytes,例‘ABC'.encode('ascii'),纯英文的str可用ascii编码为bytes,内容是一样的，含有中文的str可用utf-8编码为bytes.无法用ascii来编码，因为中文编码范围超 过了ascii的编码范围，
+在bytes中无法显示为ascii的字符字节，用\x##显示。
+在网络硬盘读到的数据是bytes,转为str，用decode()方法。
+str包含了多少个字符，用len(str)方法。
+如果是bytes类型，len(b'str')就计算的是字节数。例len(b'\xe4\xb8\xad\xe6\x96\x87') ->6
+
+
+
  
