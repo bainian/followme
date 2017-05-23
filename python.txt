@@ -76,6 +76,15 @@ strAll = "{0}, {1}".format(i, j) 格式化
 str包含了多少个字符，用len(str)方法。
 如果是bytes类型，len(b'str')就计算的是字节数。例len(b'\xe4\xb8\xad\xe6\x96\x87') ->6
 
-
+map, reduce, filter运用：（×把前面的函数应用在后面的列表的每一个元素上，默认会为前面函数传入每一个元素，只不过前面的函数逻辑功能不同×）
+找出回字文：
+def is_palindrome(n):
+  b = [x for x in str(n)]
+  b.reverse()
+  print('b = %s' % b)
+  b = reduce(lambda x, y : x * 10 + y, map(int,b))
+  return b == n
+  
+print(list(filter(is_palindrome, range(0, 9999)))
 
  
