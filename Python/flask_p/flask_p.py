@@ -68,10 +68,10 @@ def env():
     return '<p>Your browser is %s</p>' % user_agent
 
 
-if __name__ == '__main__':
-    manager.run()
-
-
 class NameForm(Form):
     name = StringField('What your name?', validators=[Required()])
     submit = SubmitField('Submit')
+
+
+if __name__ == '__main__':
+    manager.run()
