@@ -24,7 +24,7 @@ def sigmoid(inX):
 
 def gradAscent(dataMatIn, classLabels):
     '''
-    梯度上升算法求每个特征的回归系数值，,一次全部处理，批处理
+    梯度上升算法求每个特征的回归系数值，,每次全部处理，批处理
     :param dataMatIn:
     :param classLabels:
     :return:
@@ -36,8 +36,7 @@ def gradAscent(dataMatIn, classLabels):
     maxCycles = 500
     weights = ones((n, 1))
     for k in range(maxCycles):
-        matrix_weights = dataMatrix * weights  # 两个 ndarray有时候 相告乖会报错，这时候 用matrix主为矩阵相乖就好了，或者使用dot，但是一个matrix与一个ndarray就不会出错
-        h = sigmoid(matrix_weights)
+        h = sigmoid(dataMatrix * weights)  # 两个 ndarray有时候 相告乖会报错，这时候 用matrix主为矩阵相乖就好了，或者使用dot，但是一个matrix与一个ndarray就不会出错
         error = (labelMat - h)
         weights = weights + alpha * dataMatrix.transpose() * error
     return weights
@@ -96,12 +95,58 @@ def stocGradAscent1(dataMatrix, classLabels, numIter=150):
     return weights
 
 
-ascent = gradAscent(*loadDataSet())
-ascent0 = stocGradAscent0(*loadDataSet())
-ascent1 = stocGradAscent1(*loadDataSet())
-print('weight = ', ascent)
-print('weight0 = ', ascent0)
-print('weight1 = ', ascent1)
-plotBestFit(ascent)
-plotBestFit(ascent0)
-plotBestFit(ascent1)
+def classifyVector(inX, weights):
+    prob = sigmoid(sum(inX * weights))
+    if prob > 0.5:
+        return 1.0
+    else:
+        return 0.0
+
+
+def colicTest():
+    frTrain = open('horseColicTraining.txt')
+    frTest = open('horseColicTest.txt')
+    trainingSet = []
+    trainingLabels = []
+    for line in frTrain.readlines():
+        currLine = line.strip().split('\t')
+        lineArr = []
+        for i in range(21):
+            lineArr.append(float(currLine[i]))
+        trainingSet.append(lineArr)
+        trainingLabels.append(float(currLine[21]))
+    trainWeights = stocGradAscent1(array(trainingSet), trainingLabels, 1000)
+    errorCount = 0
+    numTestVec = 0.0
+    for line in frTest.readlines():
+        numTestVec += 1.0
+        currLine = line.strip().split('\t')
+        lineArr = []
+        for i in range(21):
+            lineArr.append(float(currLine[i]))
+        if int(classifyVector(array(lineArr), trainWeights)) != int(currLine[21]):
+            errorCount += 1
+    errorRate = (float(errorCount) / numTestVec)
+    print('the error rate of this test is %f' % errorRate)
+    return errorRate
+
+
+def multiTest():
+    numTests = 10
+    errorSum = 0.0
+    for k in range(numTests):
+        errorSum += colicTest()
+    print('after %d iterations the average error rate is %f' % (numTests, errorSum / float(numTests)))
+
+
+# ascent = gradAscent(*loadDataSet())
+# ascent0 = stocGradAscent0(*loadDataSet())
+# ascent1 = stocGradAscent1(*loadDataSet())
+# print('weight = ', ascent)
+# print('weight0 = ', ascent0)
+# print('weight1 = ', ascent1)
+# plotBestFit(ascent)
+# plotBestFit(ascent0)
+# plotBestFit(ascent1)
+
+multiTest()
