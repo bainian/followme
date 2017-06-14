@@ -139,14 +139,14 @@ def multiTest():
     print('after %d iterations the average error rate is %f' % (numTests, errorSum / float(numTests)))
 
 
-# ascent = gradAscent(*loadDataSet())
-# ascent0 = stocGradAscent0(*loadDataSet())
-# ascent1 = stocGradAscent1(*loadDataSet())
-# print('weight = ', ascent)
-# print('weight0 = ', ascent0)
-# print('weight1 = ', ascent1)
+ascent = gradAscent(*loadDataSet())
+ascent0 = stocGradAscent0(*loadDataSet())
+ascent1 = stocGradAscent1(*loadDataSet())
+print('weight = ', ascent)
+print('weight0 = ', ascent0)
+print('weight1 = ', ascent1)
 # plotBestFit(ascent)
 # plotBestFit(ascent0)
 # plotBestFit(ascent1)
 
-multiTest()
+# multiTest()
