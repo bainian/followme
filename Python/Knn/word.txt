@@ -13,10 +13,13 @@ Wrangle
 cleanse
 goals
 implications
+metric
 correlation
 Correcting
+correctly
 visa-versa
 survival
+deceased
 certain
 estimate
 innacurate
@@ -29,6 +32,19 @@ prediction
 Preprocessing
 Gradient
 Boosting
+Mentor
+evaluation
+accuracy
+Continous
+Discrete
+numeric
+alphanumeric
+determine
+among
+insights
+representative
+percentiles
+Stochastic
 
 
 
