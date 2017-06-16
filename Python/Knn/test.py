@@ -1,3 +1,4 @@
+from __builtin__ import reduce
 from numpy import *
 
 n = ones((2, 4))
@@ -20,11 +21,16 @@ data = []
 for line in lines:
     data.append(line.strip().split(',')[0])
 
-arr = mat(data)
-arr = arr.transpose()
-print(arr)
-for i in range(arr.shape[0]):
-    if (i > 2):
-        print(arr[i])
-    continue
-    print('---')
+# arr = mat(data)
+# arr = arr.transpose()
+# print(arr)
+# for i in range(arr.shape[0]):
+#     if (i > 2):
+#         print(arr[i])
+#     continue
+#     print('---')
+
+for i in range(2, 9):
+    if i == 3: print('i == 3'); continue
+    print(i)
+

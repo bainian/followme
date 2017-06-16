@@ -45,6 +45,9 @@ insights
 representative
 percentiles
 Stochastic
+primal problem
+dual problemt
+
 
 
 
