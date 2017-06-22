@@ -1,4 +1,3 @@
-from __builtin__ import reduce
 from numpy import *
 
 n = ones((2, 4))
