@@ -1059,3 +1059,35 @@ sudo apt-get install scim-gtk2-immodule
 （这个命令会根据依赖关系自动安装 scim-server-socket, scim-frontend-socket, scim-config-socket，如果没有安装scim，也会自动安装）
 
 安装后无须重启X，只要重新打开基于GTK的软件就可以使用SCIM了！
+
+
+smb 服务器的配置
+sudo apt-get install samba samba-common-bin
+sudo nano /etc/samba/smb.conf
+sudo smbpasswd -a pi # user name: pi ,passwd:510*
+sudo service smbd restart  # sudo /etc/init.d/samba restart
+
+挂载移动硬盘通过samba分享
+
+要先安装bindfs:
+sudo apt-get install bindfs
+然后创建新的挂载点，并利用bindfs进行绑定挂载:
+mkdir /mnt/media
+bindfs -o perms=0755 /media /mnt/media
+这样新挂载点/mnt/median的权限就是0755，任何用户都可以访问了, 不过这只是临时挂载, 可以通过修改/etc/rc.local文件来实现开机时自动挂载，代码如下所示:
+# ...
+bindfs -o perms=0755 /media /mnt/media
+exit 0
+修改samba配置，让其在局域网内共享
+修改配置文件/etc/samba/smb.conf，添加新的访问点如下所示:
+# ...
+[DATA]
+	comment = DATA 
+	path = /mnt/media
+	writable = yes
+	browseable = yes
+	read only = yes
+	valid users = pi
+	public = yes
+# ...   
+
