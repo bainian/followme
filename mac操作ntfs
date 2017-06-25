@@ -46,3 +46,177 @@ linux中如果对移动硬盘不能写时原因可能是因为挂在media目录�
 　　第五步：输入 ln 命令挂载硬盘卷标(如果不进行这一步，可能不会在 Finder 中显示)：
 
 　　sudo ln -s /Volumes ~/Desktop/Volumes
+
+==================用了ntft-3g来加载ntfs=后面的方案没有用================
+https://www.howtogeek.com/236055/how-to-write-to-ntfs-drives-on-a-mac/
+
+
+Using OS X El Capitan 10.11.5 (15F34)
+
+brew install Caskroom/cask/osxfuse
+brew update && brew install ntfs-3g
+Rebooted and pressed Command + R, then from Terminal, ran csrutil disable
+sudo mv /sbin/mount_ntfs /sbin/mount_ntfs.original
+sudo ln -s /usr/local/sbin/mount_ntfs /sbin/mount_ntfs
+csrutil enable
+Verified with ls -l /sbin/mount_ntfs*
+
+
+How to Write to NTFS Drives on a Mac
+By Chris Hoffman on December 14th, 2015
+
+
+Apple’s macOS can read from Windows-formatted NTFS drives, but can’t write to them out of the box. Here are a few solutions for getting full read/write access to NTFS drives.
+
+This could be useful if you want to write to a Boot Camp partition on your Mac, as Windows system partitions must use the NTFS file system. However, for external drives, you should probably use exFAT instead. macOS can natively read and write to exFAT drives, just like Windows can.
+
+Low on Disk Space? Use CleanMyMac 3 to Clean Your Mac the Easy Way
+CleanMyMac
+
+Macs are great, but they also come with notoriously small hard drives that fill up quickly.
+
+There’s no better tool than CleanMyMac 3 to clean up your Mac’s hard drive by finding all the junk, temporary files, hidden nonsense, and other stuff that could be cleaned up.
+
+But it doesn’t stop there — CleanMyMac can also be used to clean up your startup items list, remove system plugins, clean up after uninstalled applications, and more. And there’s a free trial, so you can try it out before you buy it.
+
+Download CleanMyMac 3 for Free Today
+
+Three Options
+RELATED ARTICLE
+What’s the Difference Between FAT32, exFAT, and NTFS?
+There are several options for this, and you’ll need to choose one:
+
+Paid Third-Party Drivers: There are third-party NTFS drivers for Mac that you can install, and they’ll work quite well. These are paid solutions, but they’re easy to install and should offer better performance than the free solutions below.
+Free Third-Party Drivers: There’s a free and open-source NTFS driver you can install on a Mac to enable write support. Unfortunately, this take a bit of extra work to install, especially on Macs with the new System Integrity Protection feature, added in 10.11 El Capitan. It’s slower than paid solutions and automatically mounting NTFS partitions in read-write mode is a security risk.
+Apple’s Experimental NTFS-Write Support: The macOS operating system includes experimental support for writing to NTFS drives. However, it’s off by default and requires some messing around in the terminal to enable it. It isn’t guaranteed to work properly and could potentially cause problems with your NTFS file system. In fact, we’ve had it corrupt data before. We really don’t recommend using this. It’s disabled by default for a reason.
+We highly recommend paying for a third-party NTFS driver if you need to do this as the other solutions don’t work as well and are more work to set up.
+
+The Best Paid Third-Party Driver: Paragon NTFS for Mac
+
+
+Paragon NTFS for Mac costs $19.95 and offers a ten-day free trial. It’ll install cleanly and easily on modern versions of macOS, including macOS 10.12 Sierra and Mac OS X 10.11 El Capitan. It really does “just work”, so it’s the best option if you’re willing to pay a small amount of money for this feature.
+
+You also won’t have to fiddle with terminal commands to manually mount partitions, insecurely mount partitions automatically, or deal with potential corruption as you will with the free drivers below. If you need this feature, paying for software that does it properly is worth it. We cannot stress this enough.
+
+If you own a Seagate drive, be aware that Seagate offers a free download of Paragon NTFS for Mac so you won’t have to purchase anything extra.
+
+You could also purchase Tuxera NTFS for Mac, which costs $31 and offers a fourteen-day free trial. But Paragon NTFS does the same thing and is cheaper.
+
+The Best Free Third-Party Drivers: FUSE for macOS
+
+
+This method is free, but it requires a good bit of work, and is less secure. To make your Mac automatically mount NTFS partitions in read-write mode, you’ll have to temporarily disable System Integrity Protection and replace one of Apple’s built-in tools with a binary that is more vulnerable to attack. So this method is a security risk.
+
+However, you can use FUSE to mount NTFS partitions in read-write mode manually if you don’t mind using the Terminal. This is more secure, but it’s more work.
+
+First, download FUSE for macOS and install it. Use the default options when installing it.
+
+RELATED ARTICLE
+How to Install Packages with Homebrew for OS X
+You’ll also need Apple’s command line developer tools installed to continue. If you haven’t installed them yet, you can open a Terminal window from Finder > Applications > Utilities and run the following command to do so:
+
+xcode-select --install
+Click “Install” when you’re prompted to install the tools.
+
+
+
+RELATED ARTICLE
+How to Install Packages with Homebrew for OS X
+In addtion, you’ll need to download and install homebrew if you haven’t already installed it on your Mac. Homebrew is a “package manager” for Mac OS X. Copy-paste the following command into a Terminal window and press Enter to install it:
+
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+Press Enter and provide your password when prompted. The script will automatically download and install Homebrew.
+
+
+
+Once you’ve installed the developer tools and Homebrew, run the following command in a Terminal window to install ntfs-3g:
+
+brew install ntfs-3g
+
+
+You can now manually mount NTFS partitions in read/write mode. From a terminal window, run the following command to create a mount point at /Volumes/NTFS. You only need to do this once.
+
+sudo mkdir /Volumes/NTFS
+When you connect an NTFS drive to the computer, run the following command to list any disk partitions:
+
+diskutil list
+You can then identify the device name of the NTFS partition. Just look for the partition with the Windows_NTFS file system. In the screenshot below, it’s /dev/disk3s1 .
+
+
+
+The NTFS partition was probably automatically mounted by your Mac, so you’ll need to unmount it first. Run the following command, replacing /dev/disk2s1 with the device name of your NTFS partition.
+
+sudo umount /dev/disk2s1
+To mount the drive, run the following command, replacing /dev/disk2s1 with the device name of your NTFS partition.
+
+sudo /usr/local/bin/ntfs-3g /dev/disk2s1 /Volumes/NTFS -olocal -oallow_other
+You’ll see the file system mounted at /Volumes/NTFS. It will also appear on your desktop as a normal mounted drive. You can eject it normally when you want to unplug it.
+
+
+
+If you’re happy manually mounting partitions with the above instructions, you don’t have to continue.
+
+RELATED ARTICLE
+How to Disable System Integrity Protection on a Mac (and Why You Shouldn’t)
+If you want to make your Mac automatically mount NTFS drives you connect in read-write mode, you’ll need to disable System Integrity Protection.
+
+Warning: You probably don’t want to do this! The software’s official instructions warn that this is a security risk. You will be replacing the NTFS mount tools in your Mac with the ntfs-3g tools, which will run as the root user. Because of the way Homebrew installs software, malware running on your Mac could overwrite these tools. It’s probably not work the risk, but we’ll explain how to do if if you want to take the risk.
+
+Reboot your Mac and hold Command+R while it’s booting. It’ll boot into a special recovery mode environment.
+
+Launch a terminal from the Utilities menu in recovery mode and run the following command:
+
+csrutil disable
+Once you have, reboot your Mac normally.
+
+
+
+From the Mac desktop, open a Terminal window again and run the following commands to make ntfs-3g function:
+
+sudo mv /sbin/mount_ntfs /sbin/mount_ntfs.original
+
+sudo ln -s /usr/local/sbin/mount_ntfs /sbin/mount_ntfs
+
+
+Lastly, re-enable System Integrity Protection. Reboot your Mac and hold Command+R while it’s booting to enter recovery mode. Launch a terminal in recovery mode and run the following command:
+
+csrutil enable
+Once you have, reboot your Mac. NTFS-write support should be functioning now.
+
+To undo your changes and uninstall everything, you’ll need to first disable System Integrity Protection. After you do, run the following commands:
+
+sudo rm /sbin/mount_ntfs
+
+sudo mv /sbin/mount_ntfs.original /sbin/mount_ntfs
+
+brew uninstall ntfs-3g
+You can then uninstall FUSE for macOS from its panel in the System Preferences window and re-enable System Integrity Protection.
+
+You can see why we recommend the $20 option instead now, huh?
+
+Apple’s Experimental NTFS-Writing Support: Don’t Do This, Seriously
+We don’t recommend the below method because it’s the least tested. This might not work properly, so don’t blame us or Apple if you experience problems. It’s still unstable as of macOS 10.12 Sierra, and it may never be fully stable. This is really just here for educational purposes.
+
+First, be sure that your drive has a convenient single-word label. If it doesn’t, change its label. This will make this process easier.
+
+You’ll first need to launch a terminal. Navigate to Finder > Applications > Utilities > Terminal or press Command+Space, type Terminal, and press Enter.
+
+Type the following command into the terminal to open the /etc/fstab file for editing in the nano text editor:
+
+sudo nano /etc/fstab
+
+
+Add the following line to nano, replacing “NAME” with the label of your NTFS drive:
+
+LABEL=NAME none ntfs rw,auto,nobrowse
+Press Ctrl+O to save the file after you’re done, and then press Ctrl+X to close nano.
+
+(If you have multiple NTFS drives you want to write to, add a different line for each.)
+
+
+
+Connect the drive to the computer—unplug it and reconnect it if it’s already connected—and you’ll see it under the “/Volumes” directory. In a Finder window, you can click Go > Go to Folder and type “/Volumes” into the box to access it. It won’t pop up automatically and appear on your desktop like drives normally do.
+
+To undo this change later, just repeat the above process to open the /etc/fstab file in nano. Delete the line you added to the file and save your changes.
+
+Most Mac users will be better off formatting external drives with exFAT, ensuring they work well on both Windows and Mac OS X without any extra work. if you must write to an NTFS drive, one of the paid, third-party drivers will be the easiest option with the best performance and least risk of file corruption.
